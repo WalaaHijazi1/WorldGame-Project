@@ -26,7 +26,7 @@ pipeline {
         stage('Build Docker image & run it') {
             steps {
                 sh 'docker build -t scores-flask-server .'
-                sh 'docker run -d --name scores-flask-server -p 8777:8777 scores-flask-server'
+	  sh "docker run -d --name scores-flask-server-${env.BUILD_ID} -p 8777:8777 scores-flask-server"
             }
         }
 
