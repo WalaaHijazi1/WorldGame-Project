@@ -66,7 +66,7 @@ def test_scores_service(url):
 code if the tests failed and 0 if they passed.
 """
 def main_function():
-    url = "http://127.0.0.1:8777"
+    url = "http://host.docker.internal:8777"
     result = test_scores_service(url)
 
     if result:
