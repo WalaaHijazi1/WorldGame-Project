@@ -30,7 +30,10 @@ pipeline {
         }
         stage('Run Docker image') {
            steps {
-	sh' docker run -d --name scores-flask-server-${env.BUILD_ID} -p 8777:8777 scores-flask-server'
+	        sh """
+            docker rm -f scores-flask-server-${env.BUILD_ID} || true
+            docker run -d --name scores-flask-server-${env.BUILD_ID} -p 8777:8777 scores-flask-server
+       	 """
           }
        }
         stage('Install Dependencies') {
