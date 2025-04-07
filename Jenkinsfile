@@ -15,21 +15,14 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Build and Start Services') {
             steps {
                 script {
-                    sh 'docker-compose build'
-                }
-            }
-        }
-
-        stage('Start Services') {
-            steps {
-                script {
-                    sh """
-                        docker-compose up -d app selenium-hub chrome
-                        sleep 30  # Wait for services to initialize
-                    """
+                    // Build using Docker's compose plugin
+                    sh 'docker compose build'
+                    
+                    // Start services in detached mode
+                    sh 'docker compose up -d --wait app selenium-hub chrome'
                 }
             }
         }
@@ -57,7 +50,7 @@ pipeline {
                     )]) {
                         sh """
                             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
-                            docker tag ${COMPOSE_PROJECT_NAME}_app:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
+                            docker tag ${COMPOSE_PROJECT_NAME}-app:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:latest
                         """
@@ -70,7 +63,8 @@ pipeline {
     post {
         always {
             script {
-                sh 'docker-compose down -v --remove-orphans'
+                // Use Docker's compose plugin for cleanup
+                sh 'docker compose down -v --remove-orphans || true'
             }
             deleteDir()
         }
