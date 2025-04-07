@@ -17,6 +17,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import sys
 
+import requests
+
 path = r"C:\Users\Smart\Downloads\chromedriver-win64\chromedriver.exe" # path to Chrome Driver.
 service = Service(path)
 # driver = webdriver.Chrome(service=service)
@@ -65,11 +67,35 @@ def test_scores_service(url):
             driver.quit()
 
 
+
+
+def wait_for_server(url, timeout=30):
+    for _ in range(timeout):
+        try:
+            r = requests.get(url)
+            if r.status_code == 200:
+                print(f"Server is up: {url}")
+                return True
+        except requests.exceptions.ConnectionError:
+            pass
+        time.sleep(1)
+    print("Server did not start in time")
+    return False
+
+
+
 #2. main_function to call our tests function. The main function will return -1 as an OS exit
 #code if the tests failed and 0 if they passed.
 
 def main_function():
     url = "http://localhost:8777"
+    if wait_for_server("http://localhost:8777"):
+      test_scores_service("http://localhost:8777")
+      
+    else:
+      print("Flask server not reachable")
+    exit(1)
+    
     result = test_scores_service(url)
 
     if result:
