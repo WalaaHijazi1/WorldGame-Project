@@ -28,18 +28,27 @@ pipeline {
         }
 
         stage('Run E2E Tests') {
-            steps {
-                script {
-                    docker.image('python:3.8-slim').inside("--network ${COMPOSE_PROJECT_NAME}_test-network") {
-                        sh '''
-                            pip install selenium
-                            python e2e.py http://app:8777
-                        '''
-                    }
-                }
-            }
-        }
-
+    	steps {
+        		script {
+            			docker.image('python:3.8-slim').inside("--network ${COMPOSE_PROJECT_NAME}_test-network") {
+                		sh '''
+                    		# Create a writable directory for Python packages
+                    		export PYTHONUSERBASE=/tmp/packages
+                    		mkdir -p $PYTHONUSERBASE
+                    
+                    		# Install selenium in user space
+                    		pip install --user selenium
+                    
+                    		# Add package directory to Python path
+                    		export PYTHONPATH=$PYTHONUSERBASE/lib/python3.8/site-packages:$PYTHONPATH
+                    
+                    		# Run the tests
+                    		python e2e.py http://app:8777
+                		'''
+            			}
+        		}
+   	       }
+	}
         stage('Push to DockerHub') {
             steps {
                 script {
