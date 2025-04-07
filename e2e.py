@@ -108,7 +108,7 @@ def test_scores_service(url):
             driver.set_page_load_timeout(30)
             driver.get(url)
             
-            time.sleep(2)  # Wait for page load
+            time.sleep(2)
             score_element = driver.find_element(By.ID, 'score')
             score = int(score_element.text.strip())
             
@@ -123,14 +123,14 @@ def test_scores_service(url):
             if attempt == max_retries - 1:
                 print("All retries exhausted!")
                 return False
-            time.sleep(5)  # Wait before retry
+            time.sleep(5)
         finally:
             if driver:
                 driver.quit()
 
 def main_function():
     # Use environment variable or default to localhost
-    url = "http://localhost:8777"  # Change this if running in Docker
+    url = "http://localhost:8777"  # ✅ Use correct URL for your environment
     if test_scores_service(url):
         print("Test passed!")
         sys.exit(0)
