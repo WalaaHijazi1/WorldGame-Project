@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = 'walaahijazi/scores-flask-server'
-        COMPOSE_PROJECT_NAME = 'scores-flask-server'
+        DOCKERHUB_REPO = 'walaahijazi/scores-flask-server' // Example, adjust this
     }
 
     stages {
@@ -15,43 +14,50 @@ pipeline {
             }
         }
 
-        stage('Build and Start Services') {
+        stage('Update Repository') {
             steps {
-                script {
-                    // Build using Docker's compose plugin
-                    sh 'docker compose build'
-                    
-                    // Start services in detached mode
-                    sh 'docker compose up -d --wait app selenium-hub chrome'
-                }
+                sh '''
+                    git fetch --all
+                    git reset --hard origin/main
+                '''
             }
         }
 
-        stage('Run E2E Tests') {
-    	steps {
-        		script {
-            			docker.image('python:3.8-slim').inside("--network ${COMPOSE_PROJECT_NAME}_test-network") {
-                		sh '''
-                    		# Create a writable directory for Python packages
-                    		export PYTHONUSERBASE=/tmp/packages
-                    		mkdir -p $PYTHONUSERBASE
-                    
-                    		# Install selenium in user space
-                    		pip install --user selenium
-                    
-                    		# Add package directory to Python path
-                    		export PYTHONPATH=$PYTHONUSERBASE/lib/python3.8/site-packages:$PYTHONPATH
-                    
-                    		# Run the tests
-                    		python e2e.py http://app:8777
-                		'''
-            			}
-        		}
-   	       }
-	}
-        stage('Push to DockerHub') {
+        stage('Build Docker image') {
+            steps {
+                sh 'docker build -t scores-flask-server .'
+            }
+        }
+        stage('Run Docker image'){
+           steps{
+	sh' docker run -d --name scores-flask-server-${env.BUILD_ID -p 8777:8777 scores-flask-server'
+          }
+       }
+        stage('Install Dependencies') {
+            steps {
+                sh 'rm -rf venv'
+                sh 'python3 -m venv venv'
+                sh '''
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Test Flask Server') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python3 e2e.py
+                '''
+            }
+        }
+
+        stage('Finalize') {
             steps {
                 script {
+                    sh "docker-compose -p scores-flask-server down -v"
+
                     withCredentials([usernamePassword(
                         credentialsId: 'docker-username',
                         usernameVariable: 'DOCKERHUB_USER',
@@ -59,7 +65,7 @@ pipeline {
                     )]) {
                         sh """
                             docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
-                            docker tag ${COMPOSE_PROJECT_NAME}-app:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
+                            docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:latest
                         """
@@ -71,10 +77,6 @@ pipeline {
 
     post {
         always {
-            script {
-                // Use Docker's compose plugin for cleanup
-                sh 'docker compose down -v --remove-orphans || true'
-            }
             deleteDir()
         }
     }
