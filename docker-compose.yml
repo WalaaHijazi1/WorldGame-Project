@@ -5,7 +5,7 @@ services:
     ports:
       - "8777:8777"
     volumes:
-      - ./scores_file.txt:/app/scores_file.txt                  # mounts files or directories from your host into the container.
+      - ./scores_file.txt:/app/Scores.txt                  # mounts files or directories from your host into the container.
     networks:
       - test-network
 
