@@ -10,5 +10,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Ensure Scores.txt is writable
 RUN chmod a+rw scores_file.txt
 
+# Expose port 8777
+EXPOSE 8777
+
 # Run the Flask server
 CMD ["python","MainScores.py"]
