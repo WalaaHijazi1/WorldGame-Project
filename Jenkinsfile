@@ -28,8 +28,8 @@ pipeline {
                 sh 'docker build -t scores-flask-server .'
             }
         }
-        stage('Run Docker image'){
-           steps{
+        stage('Run Docker image') {
+           steps {
 	sh' docker run -d --name scores-flask-server-${env.BUILD_ID -p 8777:8777 scores-flask-server'
           }
        }
