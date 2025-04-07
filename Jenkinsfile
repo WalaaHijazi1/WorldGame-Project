@@ -22,7 +22,20 @@ pipeline {
                 '''
             }
         }
-
+        stage('Clean Port 8777 Containers') {
+             steps {
+        	sh '''
+            		CONTAINERS=$(docker ps --filter "publish=8777" --format "{{.ID}}")
+            		if [ -n "$CONTAINERS" ]; then
+                		echo "Stopping containers using port 8777..."
+                		docker stop $CONTAINERS
+                		docker rm $CONTAINERS
+            		else
+                		echo "No containers using port 8777"
+            		fi
+        	     '''
+   	}
+           }
         stage('Build Docker image') {
             steps {
                 sh 'docker build -t scores-flask-server .'
