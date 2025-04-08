@@ -85,7 +85,6 @@ pipeline {
                     	echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER} --password-stdin
                     	docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
                     	docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
-                    	docker push ${DOCKERHUB_REPO}:latest
                 	"""
     
                     }
