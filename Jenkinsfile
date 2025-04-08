@@ -72,17 +72,22 @@ pipeline {
         stage('Finalize') {
             steps {
                 script {
-                    sh "docker-compose -p scores-flask-server down -v"
+	     	withCredentials([usernamePassword(
+                	credentialsId: 'docker-username',
+                	usernameVariable: 'DOCKERHUB_USER',
+                	passwordVariable: 'DOCKERHUB_PASS'
+            		)]) {
+                	// Debug credentials
+                	echo "Logging in as ${DOCKERHUB_USER}"
 
-                    withCredentials([usernamePassword(
-                        credentialsId: 'docker-username',
-                        passwordVariable: 'DOCKERHUB_PASS'
-                    )]) {
-                        sh """
-                            docker login -u walaahij -p ${DOCKERHUB_PASS}
-                            docker tag scores-flask-server:latest walaahij/scores-flask-server:${env.BUILD_ID}
-                            docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
-                        """
+               	 // Log in securely
+                	sh """
+                    	echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER} --password-stdin
+                    	docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
+                    	docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
+                    	docker push ${DOCKERHUB_REPO}:latest
+                	"""
+    
                     }
                 }
             }
