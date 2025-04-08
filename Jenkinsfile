@@ -68,28 +68,7 @@ pipeline {
                 '''
             }
         }
-        stage('Login and Push') {
-            steps {
-        	script {
-            		withCredentials([usernamePassword(
-                	credentialsId: 'docker-username',
-                	usernameVariable: 'DOCKERHUB_USER',
-                	passwordVariable: 'DOCKERHUB_PASS'
-            		)]) {
-                	// Debug credentials
-                	echo "Logging in as ${DOCKERHUB_USER}"
 
-               	 // Log in securely
-                	sh """
-                    	echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER} --password-stdin
-                    	docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
-                    	docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
-                    	docker push ${DOCKERHUB_REPO}:latest
-                	"""
-            		}
-        	         }
-    	    }
-	}
         stage('Finalize') {
             steps {
                 script {
