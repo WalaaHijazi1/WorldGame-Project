@@ -94,7 +94,7 @@ def main_function():
       
     else:
       print("Flask server not reachable")
-    exit(1)
+      exit(1)
     
     result = test_scores_service(url)
 
