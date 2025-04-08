@@ -103,7 +103,6 @@ pipeline {
                             docker login -u walaahij -p ${DOCKERHUB_PASS}
                             docker tag scores-flask-server:latest walaahij/scores-flask-server:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
-                            docker push ${DOCKERHUB_REPO}:latest
                         """
                     }
                 }
