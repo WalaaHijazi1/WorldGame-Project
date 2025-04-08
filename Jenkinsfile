@@ -97,12 +97,11 @@ pipeline {
 
                     withCredentials([usernamePassword(
                         credentialsId: 'docker-username',
-                        usernameVariable: 'DOCKERHUB_USER',
                         passwordVariable: 'DOCKERHUB_PASS'
                     )]) {
                         sh """
-                            docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASS}
-                            docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}
+                            docker login -u walaahij -p ${DOCKERHUB_PASS}
+                            docker tag scores-flask-server:latest walaahij:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}
                             docker push ${DOCKERHUB_REPO}:latest
                         """
