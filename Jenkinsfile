@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_REPO = 'walaahijazi/scores-flask-server' // Example, adjust this
+        DOCKERHUB_REPO = 'walaahij/scores-flask-server' // Example, adjust this
     }
 
     stages {
