@@ -69,17 +69,16 @@ pipeline {
                 '''
             }
         }
-    stage('Test') {
+
+        stage('Test Flask Server') {
             steps {
-                script {
-                    docker.image('python:3.8-slim').inside {
-                        sh 'pip install selenium'
-                        sh 'python e2e.py http://app:8777'
-                    }
-                }
+                sh '''
+                    . venv/bin/activate                                   # activating the virtual environment.
+                    python3 tests/e2e.py                                       # running the e2e.py, that connects to the server that was created and ran in the docker container,  in order to get to the scores text file and read it.
+
+                '''
             }
         }
-
 
         stage('Finalize') {                              // this is the final stage in this ci pipeline, it pushes the image into my private Docker Hub.
             steps {
@@ -98,7 +97,6 @@ pipeline {
                     	docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}                                  # Tags the image with a versioned tag, using the current Jenkins build number as the tag.
                     	docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}                                                                     # Pushes the tagged image to Docker Hub.
                 	"""
-		dockerCompose.down()
                     }
                 }
             }
