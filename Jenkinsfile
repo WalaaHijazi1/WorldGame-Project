@@ -48,7 +48,7 @@ pipeline {
            }
         stage('Build Docker image') {
             steps {
-                sh 'docker build -t scores-flask-server .'                   # BUILDS a docker image that containes scores.py,MainScore.py and the text scores file, in order to run it as a server.
+                sh 'docker build -t scores-flask-server .'                   // BUILDS a docker image that containes scores.py,MainScore.py and the text scores file, in order to run it as a server.
             }
         }
         stage('Run Docker image') {
@@ -61,8 +61,8 @@ pipeline {
        }
         stage('Install Dependencies') {
             steps {
-                sh 'rm -rf venv'                                               # removing any old virtual environment.
-                sh 'python3 -m venv venv'                             # creating a new virtual environment with a file name of 'venv'.
+                sh 'rm -rf venv'                                               // removing any old virtual environment.
+                sh 'python3 -m venv venv'                             // creating a new virtual environment with a file name of 'venv'.
                 sh '''
                     . venv/bin/activate                                    # activating the new created virtual environment.
                     pip install -r requirements.txt                    # installing all the libraries that is defined in the requirements.txt file.
