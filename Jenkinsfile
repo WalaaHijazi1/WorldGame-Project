@@ -74,7 +74,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate                                   # activating the virtual environment.
-                    python3 e2e.py                                       # running the e2e.py, that connects to the server that was created and ran in the docker container,  in order to get to the scores text file and read it.
+                    python3 tests/e2e.py                                       # running the e2e.py, that connects to the server that was created and ran in the docker container,  in order to get to the scores text file and read it.
 
                 '''
             }
