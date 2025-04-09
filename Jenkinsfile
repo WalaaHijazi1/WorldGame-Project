@@ -93,7 +93,7 @@ pipeline {
 
                	 // Log in securely
                 	sh """
-                    	docker login -u ${DOCKERHUB_USER} --password-stdin                                                                # Logs in to Docker securely using --password-stdin, which avoids exposing the password in the process list.
+		echo ${DOCKERHUB_PASS} | docker login -u ${DOCKERHUB_USER} --password-stdin                    # Logs in to Docker securely using --password-stdin, which avoids exposing the password in the process list.
                     	docker tag scores-flask-server:latest ${DOCKERHUB_REPO}:${env.BUILD_ID}                                  # Tags the image with a versioned tag, using the current Jenkins build number as the tag.
                     	docker push ${DOCKERHUB_REPO}:${env.BUILD_ID}                                                                     # Pushes the tagged image to Docker Hub.
                 	"""
