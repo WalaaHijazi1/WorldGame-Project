@@ -1,0 +1,33 @@
+version: '3.8'
+services:                                                  # Selenium Hub Service.
+  app:
+    build: .                                               # Builds the Docker image for the application from the Dockerfile located in the current directory.
+    ports:
+      - "8777:8777"                                        # Maps port 8777 of the host to port 8777 of the container, allowing external access to the application.
+    volumes:
+      - ./scores_file.txt:/app/Scores.txt                  # Mounts the scores_file.txt from the host to /app/Scores.txt inside the container, enabling the container to access and modify                                                               the file.
+    networks:
+      - test-network                                       # Here I connect the container to the test-network network defined at theend of the file.
+
+  selenium-hub:
+    image: selenium/hub:4.1.0                              # Uses the Selenium Hub image version 4.1.0 
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"                                        # Maps port 4444 of the host to port 4444 of the container, which is the default port for Selenium 
+    networks:
+      - test-network                                       # Connects the container to the network.
+
+  chrome:                                     # Chrome Node Service
+    image: selenium/node-chrome:4.1.0         # Uses the Selenium Node Chrome image version 4.1.0 to run Chrome browser instances. 
+    shm_size: 2gb                             #  Allocates 2GB of shared memory to the container, which is important for Chrome's operation.
+    depends_on:
+      - selenium-hub                          # Ensures that the Selenium Hub service starts before the Chrome node.?
+    environment:                              # Sets environment variables for the node to connect to the hub.
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    networks:
+      - test-network
+
+networks:
+  test-network:
