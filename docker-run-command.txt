@@ -1,0 +1,24 @@
+# For docker-compose file:
+
+# Creating a new network:
+docker network create test-networki
+
+# create and start containers for all services defined in my docker-compose.yml file,
+# running them in detached mode Run the Servicesc in detach mode, 
+# if I want to check if any container has issues I can run: docker logs <container's name>
+# in order to check for any problem or if any of the containers doesn't work properly:
+docker compose up -d
+
+# Creating a container and mounting the score file into the container
+docker run -d --name app --network test-network -p 8777:8777 -v "$(pwd)/scores_file.txt:/app/Scores.txt" world-game-server
+
+
+# FOR DOCKER SERVER FILE:
+
+# Building the flask server image, from dockerfile that exist in the current file:
+docker build -t scores-flask-server .
+
+
+# Running the server in the detach mode, using port 8777 in the host machine to the same port number in the container:
+# score-flask-server is the image that was created earlier:
+docker run -d --name scores-server -p 8777:8777 scores-flask-server
