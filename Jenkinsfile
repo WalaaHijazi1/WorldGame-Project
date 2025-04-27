@@ -68,7 +68,7 @@ pipeline {
                         sh '''
                 # Here the image is being tagged with build id, after I access docker personal hub, and then the image is pushed to docker.
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-                            docker tag rest-app-server:latest walaahij/live-games-server:${BUILD_ID}
+                            docker tag live-games-server:latest walaahij/live-games-server:${BUILD_ID}
                             docker push walaahij/live-games-server:${BUILD_ID}
                         '''
                     }
