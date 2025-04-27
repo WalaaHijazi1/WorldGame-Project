@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome To Currency Roulette Game</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: rgb(210, 233, 248);
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+    .header_section {
+      padding: 20px 0;
+      background-color: rgb(210, 233, 248);
+      border-bottom: 5px solid #2c3e50;
+    }
+    .game-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .form-section {
+      text-align: center;
+      margin-top: 80px;
+    }
+    .form-section p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    input[type="number"] {
+      width: 150px;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .btn-submit {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #e91c1c;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header_section">
+  <nav class="navbar navbar-expand-lg" style="background-color: rgb(210, 233, 248);">
+    <div class="container-fluid d-flex align-items-center justify-content-start">
+      <div class="logo">
+        <a href="/">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 60px;">
+        </a>
+      </div>
+      <span class="game-title">Welcome to Currency Roulette Game</span>
+    </div>
+  </nav>
+</div>
+
+<!-- Game Form -->
+<div class="container form-section">
+  <form action="/CurrencyRoulette_results" method="POST">
+    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+    <p>The amount of money in Dollars is ($): <strong>{{ random_num }}</strong></p>
+    <p>Guess the value in ILS:</p>
+    <input type="number" name="user_choice" step="0.01" required>
+    <br>
+    <button class="btn-submit" type="submit">Submit Guess</button>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Game</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <style>
+    /* Your existing CSS styles remain unchanged */
+    body {
+      background-color: rgb(210, 233, 248);
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+
+    .header_section {
+      padding: 20px 0;
+      background-color: rgb(210, 233, 248);
+      border-bottom: 5px solid #2c3e50;
+    }
+
+    .game-card {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease-in-out, border 0.2s ease-in-out;
+      cursor: pointer;
+      border: 3px solid transparent;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .selected {
+      border: 3px solid black !important;
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .game-title {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .difficulty-container {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .difficulty-label {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .difficulty-options {
+      margin-top: 15px;
+    }
+
+    .difficulty-option {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      margin: 5px;
+      background-color: white;
+      border: 2px solid #999;
+      border-radius: 10px;
+      line-height: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .difficulty-option.selected {
+      background-color: #2c3e50;
+      color: white;
+      border-color: black;
+    }
+
+    .start-btn {
+      display: none;
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .start-btn button {
+      background-color: red;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 30px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<!-- header section start -->
+<div class="header_section">
+  <nav class="navbar navbar-expand-lg">
+    <div class="logo">
+      <a href="/">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 60px;">
+      </a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto ml-4">
+        <li class="nav-item">
+          <a class="nav-link" href="/" style="font-size: 32px; font-weight: bold; color: #2c3e50;">
+            Welcome, {{ user_name }}! Choose a Game:
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+<!-- header section end -->
+
+<!-- Game Selection -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="game-card" data-game="memory">
+        <img src="{{ url_for('static', filename='images/memory.png') }}" alt="Memory Game">
+        <div class="game-title">Memory Game</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="game-card" data-game="guess">
+        <img src="{{ url_for('static', filename='images/guess.png') }}" alt="Guess Game">
+        <div class="game-title">Guess Game</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="game-card" data-game="currency">
+        <img src="{{ url_for('static', filename='images/currency.png') }}" alt="Currency Roulette">
+        <div class="game-title">Currency Roulette</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Difficulty Selection -->
+<div class="difficulty-container">
+  <div class="difficulty-label">Please choose game difficulty:</div>
+  <div class="difficulty-options">
+    <div class="difficulty-option" data-difficulty="1">1</div>
+    <div class="difficulty-option" data-difficulty="2">2</div>
+    <div class="difficulty-option" data-difficulty="3">3</div>
+    <div class="difficulty-option" data-difficulty="4">4</div>
+    <div class="difficulty-option" data-difficulty="5">5</div>
+  </div>
+</div>
+
+<!-- Start Button -->
+<div class="start-btn text-center">
+  <button id="startBtn">START</button>
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+  let selectedGame = null;
+  let selectedDifficulty = null;
+
+  document.querySelectorAll('.game-card').forEach(card => {
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.game-card').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedGame = this.dataset.game;
+      checkStart();
+    });
+  });
+
+  document.querySelectorAll('.difficulty-option').forEach(option => {
+    option.addEventListener('click', function () {
+      document.querySelectorAll('.difficulty-option').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedDifficulty = this.dataset.difficulty;
+      checkStart();
+    });
+  });
+
+  function checkStart() {
+    if (selectedGame && selectedDifficulty) {
+      document.querySelector('.start-btn').style.display = 'block';
+    }
+  }
+
+  document.getElementById('startBtn').addEventListener('click', function () {
+    if (selectedGame && selectedDifficulty) {
+      window.location.href = `/play_game?game=${selectedGame}&difficulty=${selectedDifficulty}`;
+    }
+  });
+</script>
+
+</body>
+</html>

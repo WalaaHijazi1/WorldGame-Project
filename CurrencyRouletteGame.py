@@ -16,10 +16,12 @@ a. for given difficulty d, and total value of money t the interval will be: (t -
 from currency_converter import CurrencyConverter
 import requests
 import json
+import random
 
-def get_money_interval(user_input,d):
+def get_money_interval(random_number1,d):
     c = CurrencyConverter()
-    amount_ils = c.convert(user_input, 'USD', 'ILS')
+    # converting the number from dollars to shekels
+    amount_ils = c.convert(random_number1, 'USD', 'ILS')
     interval_min, interval_max = (amount_ils - (5 - d), amount_ils +(5 - d))
     return interval_max, interval_min
 
@@ -27,39 +29,9 @@ def get_money_interval(user_input,d):
 2. get_guess_from_user - A method to prompt a guess from the user to enter a guess of
 value to a given amount of USD
 """
-def get_guess_from_user():
+def get_random_num():
 
-    try:
-        user_input = float(input("Could you give me the amount in Dollars ($): "))
-        return user_input
-    except ValueError:
-        print("Error! the program is asking for a number not a word!")
-    except Exception as e:
-        print("Unusual Error: ", e)
+    # Generate a random number from 1 to 100 using randint function.
+    random_number = random.randint(1,100)
 
-"""
-3. play - Will call the functions above and play the game. Will return True / False if the user
-lost or won.
-"""
-
-def play(difficulty):
-    print(f"Game Difficulty Level: {difficulty}")
-
-    user_input = get_guess_from_user()
-    if user_input is None:
-        return False
-
-    interval_max, interval_min = get_money_interval(user_input, difficulty)
-    if interval_min is None and interval_max is None:
-        print("Could not retrieve exchange rate. Try again later.")
-        return False
-
-    # Get user's guess in ILS
-    user_guess = float(input("Guess the value in ILS: "))
-
-    if interval_min <= user_guess <= interval_max:
-        print(f"Congratulations! Your guess {user_guess} ILS is within the interval ({interval_max},{interval_min})")
-        return True
-    else:
-        print(f"Wrong guess! The correct value was within ({interval_max},{interval_min}), but you guessed {user_guess} ILS.")
-        return False
+    return random_number

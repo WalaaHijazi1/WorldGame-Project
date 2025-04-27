@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome To Memory Game</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: rgb(210, 233, 248);
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+    .header_section {
+      padding: 20px 0;
+      background-color: rgb(210, 233, 248);
+      border-bottom: 5px solid #2c3e50;
+    }
+    .game-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .input-number {
+      width: 60px;
+      padding: 10px;
+      font-size: 18px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    #submit-btn {
+      margin-top: 20px;
+      padding: 10px 30px;
+      background-color: #e91c1c;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #instruction {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    #number-sequence {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header_section">
+  <nav class="navbar navbar-expand-lg" style="background-color: rgb(210, 233, 248);">
+    <div class="container-fluid d-flex align-items-center justify-content-start">
+      <div class="logo">
+        <a href="/">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 60px;">
+        </a>
+      </div>
+      <span style="font-size: 32px; font-weight: bold; color: #2c3e50;">Welcome to Memory Game</span>
+    </div>
+  </nav>
+</div>
+
+<!-- Game Section -->
+<div class="container">
+  <div id="instruction"></div>
+  <div id="number-sequence"></div>
+
+  <form id="answer-form" action="/memory_result" method="POST" style="display: none;">
+    <input type="hidden" name="difficulty" value="{{ difficulty }}">
+    <div id="input-fields"></div>
+    <button type="submit" id="submit-btn">Submit</button>
+  </form>
+</div>
+
+  <!-- JavaScript -->
+<script type="text/javascript">
+    const difficulty = {{ difficulty | tojson }};
+    const sequence = {{ sequence | tojson }};
+
+    const instructionDiv = document.getElementById("instruction");
+    const numberSequenceDiv = document.getElementById("number-sequence");
+    const inputFieldsDiv = document.getElementById("input-fields");
+    const answerForm = document.getElementById("answer-form");
+
+    function displaySequence(seq) {
+      instructionDiv.textContent = "Memorize this sequence:";
+      numberSequenceDiv.textContent = seq.join("  ");
+    }
+
+
+  function showInputFields() {
+    instructionDiv.textContent = `Enter the ${difficulty} numbers you remember:`;
+    numberSequenceDiv.innerHTML = '';
+    answerForm.style.display = 'block';
+
+    for (let i = 0; i < difficulty; i++) {
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.name = 'user_input';
+      input.className = 'input-number';
+      input.required = true;
+      inputFieldsDiv.appendChild(input);
+    }
+  }
+
+  // Show the sequence for 1 second, then switch to input
+  displaySequence(sequence);
+  setTimeout(showInputFields, 1000);
+</script>
+
+</body>
+</html>

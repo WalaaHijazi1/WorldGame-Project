@@ -13,29 +13,58 @@ the current score.
 """
 
 import os
+import pymysql
+
+# Connect to sql container:
+
+def connect_to_sql():
+    connection = None
+    cursor = None
+    try:
+        connection = pymysql.connect(
+            host=os.getenv("DB_HOST"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER", "root"),
+            password=os.getenv("DB_PASSWORD", "gamespass"),
+            database=os.getenv("DB_NAME", "games_db")
+        )
+        cursor = connection.cursor()
+        # Create the users table if it doesn't exist
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS users_scores (
+                name VARCHAR(50) NOT NULL,
+                score VARCHAR(50) NOT NULL
+            );
+        """
+        cursor.execute(create_table_query)
+        print("Table 'users_scores' created or already exists.")
+
+        return connection, cursor
+  
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+        return None,None
 
 
-def add_score(difficulty):
+def add_score(difficulty,name):
 
-    # Get the directory where this script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    file = os.path.join(script_dir, 'scores_file.txt')  # Store file in script's directory
-
-    # Get the current working directory
-    print(f"File should be located at: {os.path.abspath('scores_file.txt')}")
-
-    # if score.txt file doesn't exist, then we will create one and put the number zero in it:
-    if not os.path.exists(file):
-        with open(file, 'w') as f:
-            f.write('0')
+    # Connect to database:
+    conn , cursor = connect_to_sql()
     
-    # Here we will add points if the player wins to the score.txt file:
-    with open(file, 'r+') as f1:
-        current_score = f1.read()
-        print(f"Score BEFORE adding the new points: {current_score}")
-        points_of_winning = (difficulty * 3) + 5
+    # if the connection in the function above returns None:
+    if not conn and not cursor:
+        print("Connection has failed!")
+        return None 
+    
+    points_of_winning = (difficulty * 3) + 5
+    
+    try:
+        cursor.execute(""" INSERT INTO users_scores (name,score) VALUE (%s,%s) """,(name,points_of_winning))
+        conn.commit()
+    except Exception as e:
+        print(f"Error inserting score: {e}")
+    finally:
+        cursor.close()
+        conn.close()
 
-        current_score = int(current_score) + points_of_winning
-        f1.seek(0) # Here the cursor goes back to the beginning of the file.
-        f1.write(str(current_score))
-        print(f"Score AFTER adding the new points: {current_score}")
+    return points_of_winning

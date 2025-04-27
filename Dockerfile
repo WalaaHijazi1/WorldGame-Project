@@ -2,13 +2,17 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy only necessary files
-COPY  MainScores.py Score.py Utils.py requirements.txt scores_file.txt ./
+COPY  Live.py Score.py  requirements.txt  ./
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy HTML templates
+COPY templates/ templates/
 
-# Ensure Scores.txt is writable
-RUN chmod a+rw scores_file.txt
+# Copy static files (CSS, JS, images)
+COPY static/ static/
 
-# Run the Flask server
-CMD ["python","MainScores.py"]
+# Install required Python packages
+RUN pip install flask pymysql
+
+EXPOSE 8777
+
+CMD ["python", "Live.py"]

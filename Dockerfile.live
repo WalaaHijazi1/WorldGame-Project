@@ -1,0 +1,14 @@
+# Defining the base image.
+FROM python:3.9-slim
+
+# setting the workind directory: /app inside the container.
+WORKDIR /app
+
+# Copying the files from the project directory that is used to run the game CurrencyRoulette properly.
+COPY requirements-currency.txt CurrencyRouletteGame.py ./
+
+# Installing python packages from the requirenments-currency.txt file.
+RUN pip3 install --no-cache-dir -r requirements-currency.txt
+
+# In the end, twe start the game code, in order each time we want to call it, it's working!
+CMD ["python3","Live.py"]

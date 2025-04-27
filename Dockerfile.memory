@@ -1,0 +1,20 @@
+# Use the official Python image from the DockerHub to define the base image
+FROM python:3.9-slim
+
+# Set the working directory in the container to /app
+WORKDIR /app
+
+# Copy the Python script into the container
+COPY MemoryGame.py ./
+
+# Copy the specific HTML page (CurrencyRoulleteGame.html) from templates folder
+COPY templates/MemoryGame.html templates/MemoryGame.html
+
+# Copy the entire static folder to match Flask's default static structure
+COPY static/ static/
+
+# Expose port 8779 (the port we were asked to connect to) for the Flask app to run
+EXPOSE 8779
+
+# In the end, we start the game code:
+CMD ["python3","MemoryGame.py"]

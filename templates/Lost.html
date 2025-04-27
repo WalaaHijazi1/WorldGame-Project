@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Try Again!</title>
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: rgb(210, 233, 248);
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+    .header_section {
+      padding: 20px 0;
+      background-color: rgb(210, 233, 248);
+    }
+    .message {
+      text-align: center;
+      font-size: 32px;
+      color: #2c3e50;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+    .sad-face {
+      font-size: 64px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header_section">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid d-flex align-items-center justify-content-start">
+      <div class="logo">
+        <a href="/">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="height: 60px;">
+        </a>
+      </div>
+      <span style="font-size: 32px; font-weight: bold; color: #2c3e50;">Game Over</span>
+    </div>
+  </nav>
+</div>
+
+<div class="container">
+  <div class="message">
+    Sorry {{ user_name }}!! that wasn't quite right. Try again!
+  </div>
+</div>
+
+</body>
+</html>
