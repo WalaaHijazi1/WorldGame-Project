@@ -37,6 +37,8 @@ services:
       DB_NAME: games_db
     ports:
       - "8777:8777"
+    volumes:
+      - .:/app
 
   # Exposing the app on port 8777.
   guess-game:
@@ -92,19 +94,3 @@ services:
 # It will declares the volume's name, and it is used by the sql container to store data.
 volumes:
   mysql_games_data:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
