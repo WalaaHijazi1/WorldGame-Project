@@ -10,8 +10,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: gamesapp
       MYSQL_DATABASE: games_db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: gamespass
+
     volumes:
       - mysql_games_data:/var/lib/mysql
       
