@@ -216,7 +216,7 @@ pipeline {
                   # Here I try to curl the app to which the flask server should be running,
                   # If the service is not available yet, it waits 2 seconds, then tries again,
                   # till the server is up and running.
-                        until curl -s http://localhost:8777 > /dev/null || [ $counter -ge 30 ]; do
+                        until curl -s http://localhost:8777 > /dev/null || [ $counter -ge 15 ]; do
                             echo "Waiting for service to be available on port 8777..."
                             sleep 2
                             counter=$((counter + 1))
