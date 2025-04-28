@@ -254,14 +254,14 @@ pipeline {
 
             echo "Forcing removal of remaining containers..."
 
-             # Remove all the containers with the BUILD_ID tag and the MySQL container
+             # Remove all the containers with the BUILD_ID tag and the sql-games-container container
             # Remove containers by their name if they exist.
-            docker rm -f live-games-server-${BUILD_ID} my-mysql-container guessgame-image-${BUILD_ID} memorygame-image-${BUILD_ID} currencyroulettegameimage-${BUILD_ID} || true
+            docker rm -f live-games-server-${BUILD_ID} mysql-games-container guessgame-image-${BUILD_ID} memorygame-image-${BUILD_ID} currencyroulettegameimage-${BUILD_ID} || true
 
             echo "Removing Docker images..."
             docker rmi -f walaahij/live-games-server:${BUILD_ID} walaahij/guessgame-image:${BUILD_ID} walaahij/memorygame-image:${BUILD_ID} walaahij/currencyroulettegame-image:${BUILD_ID} || true
         '''
-        }
+        	}
           }
     }
 }

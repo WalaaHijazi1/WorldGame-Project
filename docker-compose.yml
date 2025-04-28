@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   image: mysql:8.0
-  container_name: mysql-games-db
+  container_name: mysql-games-container
   restart: always
   ports:
     - 3306:3306
