@@ -11,7 +11,7 @@ COPY templates/ templates/
 COPY static/ static/
 
 # Install required Python packages
-RUN pip install flask pymysql
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 EXPOSE 8777
 
