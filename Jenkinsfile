@@ -192,7 +192,7 @@ pipeline {
                     // Substitute the BUILD_ID into the docker-compose.yml file before running
                     sh '''
                         # Remove manually started MySQL container if exists
-                        docker rm -f my-mysql-container || true
+                        docker rm -f mysql-games-container || true
 
                   # Kill any process that is using port 8777 on the host
                         sudo fuser -k 8777/tcp || true
