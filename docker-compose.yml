@@ -1,96 +1,111 @@
 version: '3.8'
 
 services:
-  image: mysql:8.0
-  container_name: mysql-games-container
-  restart: always
-  ports:
-    - 3306:3306
-
-  environment:
-    MY_SQL_ROOTPASSWORD: gamesapp
-    MY_SQL_DATABASE: games_db
-    MYSQL_USER: root
-    MYSQL_PASSWORD: gamespass
-
-  volumes:
-    - mysql_games_data:/var/lib/mysql
-
-  # Defines a health check to verify the MySQL service is up and running.
-  # Tries mysqladmin ping every 10 seconds before reporting it as "unhealthy".
-  healthcheck:
-    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-    interval: 10s
-    timeout: 5s
-    retries: 10
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-games-container
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: gamesapp
+      MYSQL_DATABASE: games_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: gamespass
+    volumes:
+      - mysql_games_data:/var/lib/mysql
+      
+    # Defines a health check to verify the MySQL service is up and running.
+    # Tries mysqladmin ping every 10 seconds before reporting it as "unhealthy".
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   live-games-server:
     image: walaahij/live-games-server:BUILD_ID_PLACEHOLDER
-    
-  depends_on:
-    mysql:
-      condition: service_healthy
-    
-  # Passing the environment variables, in order to connect the flask app to the sql database.
-  environment:
-    DB_HOST: mysql
-    DB_PORT: 3306
-    DB_USER: root
-    DB_PASSWORD: gamespass
-    DB_NAME: games_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+        
+    # Passing the environment variables, in order to connect the flask app to the sql database.
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: gamespass
+      DB_NAME: games_db
+    ports:
+      - "8777:8777"
 
   # Exposing the app on port 8777.
-  ports:
-    - "8777:8777"
+  guess-game:
+    image: walaahij/guessgame-image:BUILD_ID_PLACEHOLDER
+    depends_on:
+      mysql:
+        condition: service_healthy
     
-  Guess-Game:
-    image: walaahij/GuessGame-image:BUILD_ID_PLACEHOLDER
+    # Passing the environment variables, in order to connect the flask app to the sql database.
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: gamespass
+      DB_NAME: games_db
 
+    # Exposing the app on port 8778.
+    ports:
+      - "8778:8778"
+
+  memory-game:
+    image: walaahij/memorygame-image:BUILD_ID_PLACEHOLDER
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: gamespass
+      DB_NAME: games_db
+    ports:
+      - "8779:8779"
+
+  currencyroulette-game:
+    image: walaahij/currencyroulettegame-image:BUILD_ID_PLACEHOLDER
+    depends_on:
+      mysql:
+        condition: service_healthy
+        
+    # Passing the environment variables, in order to connect the flask app to the sql database.
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: gamespass
+      DB_NAME: games_db
     
-  # Passing the environment variables, in order to connect the flask app to the sql database.
-  environment:
-    DB_HOST: mysql
-    DB_PORT: 3306
-    DB_USER: root
-    DB_PASSWORD: gamespass
-    DB_NAME: games_db
+    # Exposing the app on port 9000.
+    ports:
+      - "9000:9000"
 
-  # Exposing the app on port 8778.
-  ports:
-    - "8778:8778"
-    
-  Memory-Game:
-    image: walaahij/MemoryGame-image:BUILD_ID_PLACEHOLDER
-
-    
-  # Passing the environment variables, in order to connect the flask app to the sql database.
-  environment:
-    DB_HOST: mysql
-    DB_PORT: 3306
-    DB_USER: root
-    DB_PASSWORD: gamespass
-    DB_NAME: games_db
-
-  # Exposing the app on port 8779.
-  ports:
-    - "8779:8779"
-  
-  CurrencyRoulette-Game:
-    image: walaahij/CurrencyRouletteGame-image:BUILD_ID_PLACEHOLDER
-
-    
-  # Passing the environment variables, in order to connect the flask app to the sql database.
-  environment:
-    DB_HOST: mysql
-    DB_PORT: 3306
-    DB_USER: root
-    DB_PASSWORD: gamespass
-    DB_NAME: games_db
-
-  # Exposing the app on port 9000.
-  ports:
-    - "9000:9000"
-    
 # It will declares the volume's name, and it is used by the sql container to store data.
 volumes:
-  mysql_data:
+  mysql_games_data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
