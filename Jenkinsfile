@@ -78,7 +78,7 @@ pipeline {
 
         stage('Build Docker Image For GuessGame') {               // Build an image of the rest app server.
             steps {
-                sh 'docker build -f Dockerfile.guess -t walaahij/GuessGame .'
+                sh 'docker build -f Dockerfile.guess -t walaahij/guessgame .'
             }
         }
         stage('Push Docker Image & Set Image Version For GuessGame') {
@@ -93,8 +93,8 @@ pipeline {
                         sh '''
                 # Here the image is being tagged with build id, after I access docker personal hub, and then the image is pushed to docker.
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-		docker tag walaahij/GuessGame:latest walaahij/GuessGame-image:${BUILD_ID}
-		docker push walaahij/GuessGame-image:${BUILD_ID}
+		docker tag walaahij/guessgame:latest walaahij/guessgame-image:${BUILD_ID}
+		docker push walaahij/guessgame-image:${BUILD_ID}
                         '''
                     }
                 }
@@ -103,7 +103,7 @@ pipeline {
 
         stage('Build Docker Image For MemoryGame') {               // Build an image of the rest app server.
             steps {
-                sh 'docker build -f Dockerfile.memory -t walaahij/MemoryGame .'
+                sh 'docker build -f Dockerfile.memory -t walaahij/memorygame .'
             }
         }
         stage('Push Docker Image & Set Image Version For MemoryGame') {
@@ -118,8 +118,8 @@ pipeline {
                         sh '''
                 # Here the image is being tagged with build id, after I access docker personal hub, and then the image is pushed to docker.
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-		docker tag walaahij/MemoryGame:latest walaahij/MemoryGame-image:${BUILD_ID}
-		docker push walaahij/MemoryGame-image:${BUILD_ID}
+		docker tag walaahij/memorygame:latest walaahij/memorygame-image:${BUILD_ID}
+		docker push walaahij/memorygame-image:${BUILD_ID}
                         '''
                     }
                 }
@@ -128,7 +128,7 @@ pipeline {
 
         stage('Build Docker Image For CurrencyRouletteGame') {               // Build an image of the rest app server.
             steps {
-                sh 'docker build -f Dockerfile.currency -t walaahij/CurrencyRouletteGame .'
+                sh 'docker build -f Dockerfile.currency -t walaahij/currencyroulettegame .'
             }
         }
         stage('Push Docker Image & Set Image Version For CurrencyRouletteGame') {
@@ -143,8 +143,8 @@ pipeline {
                         sh '''
                 # Here the image is being tagged with build id, after I access docker personal hub, and then the image is pushed to docker.
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-		docker tag walaahij/CurrencyRouletteGame:latest walaahij/CurrencyRouletteGame-image:${BUILD_ID}
-		docker push walaahij/CurrencyRouletteGame-image:${BUILD_ID}
+		docker tag walaahij/currencyroulettegame:latest walaahij/currencyroulettegame-image:${BUILD_ID}
+		docker push walaahij/currencyroulettegame-image:${BUILD_ID}
                         '''
                     }
                 }
@@ -256,10 +256,10 @@ pipeline {
 
              # Remove all the containers with the BUILD_ID tag and the MySQL container
             # Remove containers by their name if they exist.
-            docker rm -f live-games-server-${BUILD_ID} my-mysql-container GuessGame-image-${BUILD_ID} MemoryGame-image-${BUILD_ID} CurrencyRouletteGame-image-${BUILD_ID} || true
+            docker rm -f live-games-server-${BUILD_ID} my-mysql-container guessgame-image-${BUILD_ID} memorygame-image-${BUILD_ID} currencyroulettegameimage-${BUILD_ID} || true
 
             echo "Removing Docker images..."
-            docker rmi -f walaahij/live-games-server:${BUILD_ID} walaahij/GuessGame-image:${BUILD_ID} walaahij/MemoryGame-image:${BUILD_ID} walaahij/CurrencyRouletteGame-image:${BUILD_ID} || true
+            docker rmi -f walaahij/live-games-server:${BUILD_ID} walaahij/guessgame-image:${BUILD_ID} walaahij/memorygame-image:${BUILD_ID} walaahij/currencyroulettegame-image:${BUILD_ID} || true
         '''
         }
           }
