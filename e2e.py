@@ -14,21 +14,26 @@ from webdriver_manager.chrome import ChromeDriverManager
 import time
 import sys
 
-path = r"C:\Users\Smart\Downloads\chromedriver-win64\chromedriver.exe" # path to Chrome Driver.
-service = Service(path)
+#path = r"C:\Users\Smart\Downloads\chromedriver-win64\chromedriver.exe" # path to Chrome Driver.
+#service = Service(path)
 # driver = webdriver.Chrome(service=service)
 
-options=Options()
 
-# Use a temporary user data directory
-options.add_argument("--user-data-dir=/tmp/selenium-profile")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-options.add_argument("--headless")  # Optional: run without opening a browser window
-options.add_argument("--disable-gpu")
+driver_options = Options()
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options )
+driver_options.add_argument("--headless=new")
+driver_options.add_argument("--no-sandbox")
+driver_options.add_argument("--disable-dev-shm-usage")
 
+
+# Set up the ChromeDriver Service
+#service = Service(ChromeDriverManager().install())
+# Set up the ChromeDriver Service
+chromedriver_path = "/root/.wdm/drivers/chromedriver/linux64/134.0.6998.88/chromedriver-linux64/chromedriver"
+service = Service(executable_path=chromedriver_path)
+
+# Initialize the Chrome WebDriver with the service and options
+driver = webdriver.Chrome(service=service, options=driver_options)
 
 def test_scores_service(url):
 
