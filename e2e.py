@@ -19,23 +19,25 @@ import sys
 # driver = webdriver.Chrome(service=service)
 
 
-driver_options = Options()
-
-driver_options.add_argument("--headless=new")
-driver_options.add_argument("--no-sandbox")
-driver_options.add_argument("--disable-dev-shm-usage")
-
-
-# Set up the ChromeDriver Service
-#service = Service(ChromeDriverManager().install())
-# Set up the ChromeDriver Service
-chromedriver_path = "/root/.wdm/drivers/chromedriver/linux64/134.0.6998.88/chromedriver-linux64/chromedriver"
-service = Service(executable_path=chromedriver_path)
-
-# Initialize the Chrome WebDriver with the service and options
-driver = webdriver.Chrome(service=service, options=driver_options)
 
 def test_scores_service(url):
+
+    driver_options = Options()
+
+    driver_options.add_argument("--headless=new")
+    driver_options.add_argument("--no-sandbox")
+    driver_options.add_argument("--disable-dev-shm-usage")
+    
+    
+    # Set up the ChromeDriver Service
+    #service = Service(ChromeDriverManager().install())
+    # Set up the ChromeDriver Service
+    chromedriver_path = "/root/.wdm/drivers/chromedriver/linux64/134.0.6998.88/chromedriver-linux64/chromedriver"
+    service = Service(executable_path=chromedriver_path)
+    
+    # Initialize the Chrome WebDriver with the service and options
+    driver = webdriver.Chrome(service=service, options=driver_options)
+
 
     driver.get(url)
 
