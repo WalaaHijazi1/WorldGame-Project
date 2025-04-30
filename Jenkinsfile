@@ -239,7 +239,7 @@ pipeline {
             steps {
         	sh '''
             	echo "Running backend tests on the host against the running Docker Compose services..."
-            	source ${VENV_DIR}/bin/activate
+            	. ${VENV_DIR}/bin/activate
             	python3 e2e.py
         	'''
     	}
