@@ -101,10 +101,10 @@ def get_score_from_db():
     try:
         # Replace with your database connection details
         conn = mysql.connector.connect(
-            host="localhost",  # Replace with your MySQL container host
+            host="mysql",  # Replace with your MySQL container host
             user="root",  # Replace with your MySQL username
-            password="password",  # Replace with your MySQL password
-            database="world_game_db"  # Replace with your DB name
+            password="gamespass",  # Replace with your MySQL password
+            database="games_db"  # Replace with your DB name
         )
         
         cursor = conn.cursor()
@@ -129,7 +129,7 @@ def get_score_from_db():
 
 # Main function
 def main_function():
-    url = "http://localhost:8777"  # Your local Flask game URL
+    url = "http://live-games-server:8777"  # Your local Flask game URL
     result = test_scores_service(url)
 
     if result:
@@ -141,4 +141,3 @@ def main_function():
 
 if __name__ == '__main__':
     main_function()
-
