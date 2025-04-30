@@ -239,9 +239,6 @@ pipeline {
         	sh '''
 		 # Activate and install dependencies
                         	. ${VENV_DIR}/bin/activate
-
-		echo "Installing Python dependencies..."
-            		pip3 install webdriver-manager selenium
 		
             		echo "Running backend tests on the host against the running Docker Compose services..."
             		python3 e2e.py

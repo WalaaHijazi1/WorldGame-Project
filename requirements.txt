@@ -5,3 +5,4 @@ selenium
 cryptography
 currencyconverter
 webdriver-manager
+mysql-connector-python
