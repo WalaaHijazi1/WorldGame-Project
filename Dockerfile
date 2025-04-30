@@ -20,7 +20,9 @@ ENV PATH="${CHROMEDRIVER_PATH}:${PATH}"
 
 # Link ChromeDriver to a location in PATH
 RUN ln -sf /usr/lib/chromium/chromedriver /usr/local/bin/chromedriver && \
-    chmod +x /usr/lib/chromium/chro
+    chmod +x /usr/lib/chromium/chromedriver && \
+    chmod +x /usr/local/bin/chromedriver
+
 
 # Copy only necessary files
 COPY  Live.py Score.py  requirements.txt  ./
