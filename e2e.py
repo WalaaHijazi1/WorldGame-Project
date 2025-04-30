@@ -201,14 +201,21 @@ def test_scores_service(url):
                 time.sleep(2)
 
                 # Step 6: Fill out game inputs
+                
                 if game_id == "guess_game":
-                    guess_input = driver.find_element(By.NAME, "user_guess")
-                    guess_input.send_keys(str(random.randint(1, 10)))
+                    guess_game = driver.find_element_by_css_selector('[data-game="guess"]')
+                    #guess_input = driver.find_element(By.NAME, "user_guess")
+                    guess_game.send_keys(str(random.randint(1, 10)))
+                    
                 elif game_id == "currency_game":
-                    guess_input = driver.find_element(By.NAME, "user_choice")
-                    guess_input.send_keys(str(round(random.uniform(10.0, 50.0), 2)))
+                    currency_game = driver.find_element_by_css_selector('[data-game="currency"]')
+                    #guess_input = driver.find_element(By.NAME, "user_choice")
+                    currency_game.send_keys(str(round(random.uniform(10.0, 50.0), 2)))
+                    
                 elif game_id == "memory_game":
-                    inputs = driver.find_elements(By.NAME, "user_input")
+                    # Assuming you want to select the "Memory Game" card
+                    memory_game_card = driver.find_element_by_css_selector('[data-game="memory"]')
+                    # inputs = driver.find_elements(By.NAME, "user_input")
                     for inp in inputs:
                         inp.send_keys(str(random.randint(1, 9)))
 
