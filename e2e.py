@@ -24,16 +24,28 @@ def test_scores_service(url):
 
 
     driver_options = Options()
-    driver_options.add_argument("--headless")
+    driver_options.add_argument("--headless=new")
     driver_options.add_argument("--no-sandbox")
     driver_options.add_argument("--disable-dev-shm-usage")
+    driver_options.add_argument("--disable-gpu")
+    driver_options.add_argument("--remote-debugging-port=9222")
+
+    # Correct ChromeDriver path for Debian
+    service = Service(executable_path="/usr/lib/chromium/chromedriver")
+    
+
+
+    #driver_options = Options()
+    #driver_options.add_argument("--headless")
+    #driver_options.add_argument("--no-sandbox")
+    #driver_options.add_argument("--disable-dev-shm-usage")
     
     # Using system-installed ChromeDriver
-    service = Service("/usr/bin/chromedriver")
+    #service = Service("/usr/bin/chromedriver")
     
-    driver = webdriver.Chrome(service=service, options=driver_options)
+    #driver = webdriver.Chrome(service=service, options=driver_options)
     
-    
+    #####################################
 
     #driver_options = Options()
 
@@ -52,9 +64,13 @@ def test_scores_service(url):
     #driver = webdriver.Chrome(service=service, options=driver_options)
 
 
-    driver.get(url)
+    #driver.get(url)
 
     try:
+        
+        driver = webdriver.Chrome(service=service, options=driver_options)
+        driver.get(url)
+
 
         # Wait for the page to load
         time.sleep(2)
@@ -86,8 +102,8 @@ def test_scores_service(url):
 code if the tests failed and 0 if they passed.
 """
 def main_function():
-    url = "http://127.0.0.1:8777"
-    result = test_scores_service(url)
+    url = "http://localhost:8777"
+    ult = test_scores_service(url)
 
     if result:
         print("Test has passed successfully...")
