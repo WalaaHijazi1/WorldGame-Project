@@ -35,6 +35,11 @@ def test_scores_service(url):
 
     chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
     service = Service(executable_path=chromedriver_path)
+    
+    print("CHROME_BIN:", os.getenv("CHROME_BIN"))
+    print("CHROMEDRIVER_PATH:", os.getenv("CHROMEDRIVER_PATH"))
+    print("Checking if chromedriver exists:", os.path.exists("/usr/lib/chromium/chromedriver"))
+    print("Checking if chromium exists:", os.path.exists("/usr/bin/chromium"))
 
 
     #driver_options = Options()
