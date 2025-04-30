@@ -23,6 +23,11 @@ RUN apt-get update && apt-get install -y \
     wget unzip
 
 # Set environment variables to let Selenium know where Chrome is
+# Verify ChromeDriver installation and set correct permissions
+RUN ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver && \
+    chmod +x /usr/bin/chromedriver && \
+    chmod +x /usr/local/bin/chromedriver
+
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
 
