@@ -124,7 +124,7 @@ def get_score_from_db():
 def main_function():
     url = "http://localhost:8777"
     if test_scores_service(url):
-        print("\ní ¼í¾‰ All tests passed successfully!")
+        print("\nAll tests passed successfully!")
         sys.exit(0)
     else:
         print("\nâŒ One or more tests failed.")
