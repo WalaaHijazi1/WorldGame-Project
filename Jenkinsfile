@@ -245,6 +245,9 @@ pipeline {
         stage('Docker Compose Test') {
             steps {
         	sh '''
+		 # Activate and install dependencies
+                        	. ${VENV_DIR}/bin/activate
+
 		echo "Installing Python dependencies..."
             		pip3 install webdriver-manager selenium
 		
