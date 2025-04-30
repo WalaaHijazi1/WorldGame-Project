@@ -1,15 +1,6 @@
 FROM python:3.9-slim
 WORKDIR /app
 
-# Copy only necessary files
-COPY  Live.py Score.py  requirements.txt  ./
-
-# Copy HTML templates
-COPY templates/ templates/
-
-# Copy static files (CSS, JS, images)
-COPY static/ static/
-
 RUN apt-get update && apt-get install -y \
     chromium chromium-driver \
     fonts-liberation \
@@ -22,16 +13,23 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     wget unzip
 
-# Set environment variables to let Selenium know where Chrome is
-# Verify ChromeDriver installation and set correct permissions
-RUN ln -s /usr/bin/chromedriver /usr/local/bin/chromedriver && \
-    chmod +x /usr/bin/chromedriver && \
-    chmod +x /usr/local/bin/chromedriver
-
+# Set environment variables for Chrome
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
+ENV PATH="${CHROMEDRIVER_PATH}:${PATH}"
 
+# Link ChromeDriver to a location in PATH
+RUN ln -sf /usr/lib/chromium/chromedriver /usr/local/bin/chromedriver && \
+    chmod +x /usr/lib/chromium/chro
 
+# Copy only necessary files
+COPY  Live.py Score.py  requirements.txt  ./
+
+# Copy HTML templates
+COPY templates/ templates/
+
+# Copy static files (CSS, JS, images)
+COPY static/ static/
 
 # Install required Python packages
 RUN pip3 install --no-cache-dir -r requirements.txt
