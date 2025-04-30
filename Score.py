@@ -33,7 +33,7 @@ def connect_to_sql():
         create_table_query = """
             CREATE TABLE IF NOT EXISTS users_scores (
                 name VARCHAR(50) NOT NULL,
-                score VARCHAR(50) NOT NULL
+                score INT NOT NULL
             );
         """
         cursor.execute(create_table_query)
@@ -59,8 +59,24 @@ def add_score(difficulty,name):
     points_of_winning = (difficulty * 3) + 5
     
     try:
-        cursor.execute(""" INSERT INTO users_scores (name,score) VALUE (%s,%s) """,(name,points_of_winning))
+        # Check if the user already exists
+        cursor.execute("SELECT score FROM users_scores WHERE name=%s", (name,))
+        result = cursor.fetchone()
+
+        if result:
+            # User exists; update their score
+            current_score = int(result[0])
+            new_score = current_score + points_of_winning
+
+            cursor.execute("UPDATE users_scores SET score=%s WHERE name=%s", (new_score, name))
+        else:
+            # New user; insert score
+            new_score = points_of_winning
+            cursor.execute("INSERT INTO users_scores (name, score) VALUES (%s, %s)", (name, new_score))
+
         conn.commit()
+        return new_score
+        
     except Exception as e:
         print(f"Error inserting score: {e}")
         return None
