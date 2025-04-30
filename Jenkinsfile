@@ -234,6 +234,15 @@ pipeline {
             }
         }
 
+        stage('Manual Game Play') {
+            steps {
+        	echo "Opening game in browser..."
+        	// If running on a local Jenkins agent:
+        	sh 'xdg-open http://localhost:8777 || open http://localhost:8777 || start http://localhost:8777'
+        	input message: 'Play the game now, then click "Continue" when done.'
+    	}
+          }
+
         stage('Docker Compose Test') {
             steps {
           // Here I ran the backend testing to test the sql container that i ran and the docker image that I pulled from docker HUB.
