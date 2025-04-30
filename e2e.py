@@ -22,18 +22,32 @@ import sys
 
 def test_scores_service(url):
 
-    driver = None 
+    driver = None
 
 
     driver_options = Options()
-    driver_options.add_argument("--headless=new")
+    driver_options.add_argument("--headless")
     driver_options.add_argument("--no-sandbox")
     driver_options.add_argument("--disable-dev-shm-usage")
     driver_options.add_argument("--disable-gpu")
-    driver_options.add_argument("--remote-debugging-port=9222")
+    driver_options.binary_location = "/usr/bin/chromium"
+
+    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
+    service = Service(executable_path=chromedriver_path)
+
+
+    #driver_options = Options()
+    #driver_options.add_argument("--headless=new")
+    #driver_options.add_argument("--no-sandbox")
+    #driver_options.add_argument("--disable-dev-shm-usage")
+    #driver_options.add_argument("--disable-gpu")
+    #driver_options.add_argument("--remote-debugging-port=9222")
 
     # Correct ChromeDriver path for Debian
-    service = Service(executable_path="/usr/lib/chromium/chromedriver")
+    #service = Service(ChromeDriverManager().install())
+    #chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
+    #service = Service(executable_path=chromedriver_path)
+
     
 
 
