@@ -27,95 +27,49 @@ def test_scores_service(url):
     driver = None
 
 
-    driver_options = Options()
-    driver_options.add_argument("--headless")
-    driver_options.add_argument("--no-sandbox")
-    driver_options.add_argument("--disable-dev-shm-usage")
-    driver_options.add_argument("--disable-gpu")
-    #driver_options.binary_location = "/usr/bin/chromium"
-
-    #chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
-    #service = Service(executable_path=chromedriver_path)
-    
-    service = Service(ChromeDriverManager().install())
-
-
-    #driver_options = Options()
-    #driver_options.add_argument("--headless=new")
-    #driver_options.add_argument("--no-sandbox")
-    #driver_options.add_argument("--disable-dev-shm-usage")
-    #driver_options.add_argument("--disable-gpu")
-    #driver_options.add_argument("--remote-debugging-port=9222")
-
-    # Correct ChromeDriver path for Debian
-    #service = Service(ChromeDriverManager().install())
-    #chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
-    #service = Service(executable_path=chromedriver_path)
-
-    
-
-
-    #driver_options = Options()
-    #driver_options.add_argument("--headless")
-    #driver_options.add_argument("--no-sandbox")
-    #driver_options.add_argument("--disable-dev-shm-usage")
-    
-    # Using system-installed ChromeDriver
-    #service = Service("/usr/bin/chromedriver")
-    
-    #driver = webdriver.Chrome(service=service, options=driver_options)
-    
-    #####################################
-
-    #driver_options = Options()
-
-    #driver_options.add_argument("--headless=new")
-    #driver_options.add_argument("--no-sandbox")
-    #driver_options.add_argument("--disable-dev-shm-usage")
-    
-    
-    # Set up the ChromeDriver Service
-    #service = Service(ChromeDriverManager().install())
-    # Set up the ChromeDriver Service
-    #chromedriver_path = "/root/.wdm/drivers/chromedriver/linux64/134.0.6998.88/chromedriver-linux64/chromedriver"
-    #service = Service(executable_path=chromedriver_path)
-    
-    # Initialize the Chrome WebDriver with the service and options
-    #driver = webdriver.Chrome(service=service, options=driver_options)
-
-
-    #driver.get(url)
-
     try:
+    
+                # Setup WebDriver
+        driver_options = Options()
+        driver_options.add_argument('--headless')
+        driver_options.add_argument('--no-sandbox')
+        driver_options.add_argument('--disable-dev-shm-usage')
         
+        service = Service()  # You can provide the path to chromedriver if needed
         driver = webdriver.Chrome(service=service, options=driver_options)
+        
+        # Go to the given URL
+        print(f"Navigating to {url}")
         driver.get(url)
 
+        # Wait up to 10 seconds for the score element to appear
+        wait = WebDriverWait(driver, 10)
+        score_element = wait.until(EC.presence_of_element_located((By.ID, "score")))
 
-        # Wait for the page to load
-        time.sleep(2)
-
-        #Find the score element:
-        score_element = driver.find_element(By.ID, 'score')
+        # Extract score text and convert to int
         score_text = score_element.text.strip()
-
-        # Check if score is in the wanted range:
-        print("Found the score: ", score_text)
-
+        print("Found score text:", score_text)
         score = int(score_text)
 
-        # Check if score is in the wanted range:
+        # Check if score is within expected range
         if 1 < score < 1000:
+            print("Test passed. Score is within expected range.")
             return True
         else:
+            print("Test failed. Score is out of range.")
             return False
+
     except Exception as e:
-        print("Test failed:", e)
+        print("Test failed with exception:", e)
+        if driver:
+            print("Page source for debugging:")
+            print(driver.page_source)
         return False
 
     finally:
         if driver:
             driver.quit()
+
 
 """
 2. main_function to call our tests function. The main function will return -1 as an OS exit
