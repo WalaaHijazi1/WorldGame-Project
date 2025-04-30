@@ -63,6 +63,8 @@ def add_score(difficulty,name):
         conn.commit()
     except Exception as e:
         print(f"Error inserting score: {e}")
+        return None
+
     finally:
         cursor.close()
         conn.close()
