@@ -241,16 +241,15 @@ pipeline {
         	input message: 'Click "Continue" once you finish playing the game.'
     	}
         }
-
+        
         stage('Docker Compose Test') {
             steps {
-          // Here I ran the backend testing to test the sql container that i ran and the docker image that I pulled from docker HUB.
-                sh '''
-                    echo "Running backend tests inside Docker Compose..."
-                    docker-compose exec live-games-server python3 e2e.py
-                '''
-            }
-        }
+        	sh '''
+            		echo "Running backend tests on the host against the running Docker Compose services..."
+            		python3 e2e.py
+       		 '''
+   		 }
+	}
 
         stage('Docker Compose Down & Remove Image') {
             steps {
