@@ -10,12 +10,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: gamespass
       MYSQL_DATABASE: games_db
-
     volumes:
       - mysql_games_data:/var/lib/mysql
-      
-    # Defines a health check to verify the MySQL service is up and running.
-    # Tries mysqladmin ping every 10 seconds before reporting it as "unhealthy".
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
@@ -27,8 +23,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-        
-    # Passing the environment variables, in order to connect the flask app to the sql database.
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
@@ -39,25 +33,30 @@ services:
       - "8777:8777"
     volumes:
       - .:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8777"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Exposing the app on port 8777.
   guess-game:
     image: walaahij/guessgame-image:BUILD_ID_PLACEHOLDER
     depends_on:
       mysql:
         condition: service_healthy
-    
-    # Passing the environment variables, in order to connect the flask app to the sql database.
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: gamespass
       DB_NAME: games_db
-
-    # Exposing the app on port 8778.
     ports:
       - "8778:8778"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8778"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   memory-game:
     image: walaahij/memorygame-image:BUILD_ID_PLACEHOLDER
@@ -72,25 +71,30 @@ services:
       DB_NAME: games_db
     ports:
       - "8779:8779"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8779"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   currencyroulette-game:
     image: walaahij/currencyroulettegame-image:BUILD_ID_PLACEHOLDER
     depends_on:
       mysql:
         condition: service_healthy
-        
-    # Passing the environment variables, in order to connect the flask app to the sql database.
     environment:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: root
       DB_PASSWORD: gamespass
       DB_NAME: games_db
-    
-    # Exposing the app on port 9000.
     ports:
       - "9000:9000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-# It will declares the volume's name, and it is used by the sql container to store data.
 volumes:
   mysql_games_data:
