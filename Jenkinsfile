@@ -236,12 +236,11 @@ pipeline {
 
         stage('Manual Game Play') {
             steps {
-        	echo "Opening game in browser..."
-        	// If running on a local Jenkins agent:
-        	sh 'xdg-open http://localhost:8777 || open http://localhost:8777 || start http://localhost:8777'
-        	input message: 'Play the game now, then click "Continue" when done.'
+        	echo "Please open http://localhost:8777 in your browser and play the game."
+        	echo "Jenkins will pause until you confirm below that you're finished."
+        	input message: 'Click "Continue" once you finish playing the game.'
     	}
-          }
+        }
 
         stage('Docker Compose Test') {
             steps {
