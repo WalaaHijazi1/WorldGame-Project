@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 
 # Set environment variables to let Selenium know where Chrome is
 ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
 
 
 
