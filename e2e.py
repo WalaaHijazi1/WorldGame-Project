@@ -162,6 +162,8 @@ This script contains two main functions:
 This script is meant to be run in a CI/CD pipeline or local test to ensure game logic and DB integration work.
 """
 
+# -*- coding: utf-8 -*-
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
