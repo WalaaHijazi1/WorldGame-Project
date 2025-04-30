@@ -22,6 +22,8 @@ import sys
 
 def test_scores_service(url):
 
+    driver = None 
+
 
     driver_options = Options()
     driver_options.add_argument("--headless=new")
@@ -103,7 +105,7 @@ code if the tests failed and 0 if they passed.
 """
 def main_function():
     url = "http://localhost:8777"
-    ult = test_scores_service(url)
+    result = test_scores_service(url)
 
     if result:
         print("Test has passed successfully...")
