@@ -99,12 +99,12 @@ def test_scores_service(url):
 # Function to get score from SQL container
 def get_score_from_db():
     try:
-        # Replace with your database connection details
+        # the database connection details
         conn = mysql.connector.connect(
-            host="mysql",  # Replace with your MySQL container host
-            user="root",  # Replace with your MySQL username
-            password="gamespass",  # Replace with your MySQL password
-            database="games_db"  # Replace with your DB name
+            host="mysql",  # My SQL container host
+            user="root",  # My SQL username
+            password="gamespass",  # My SQL password
+            database="games_db"  # My DB name
         )
         
         cursor = conn.cursor()
@@ -129,7 +129,7 @@ def get_score_from_db():
 
 # Main function
 def main_function():
-    url = "http://live-games-server:8777"  # Your local Flask game URL
+    url = "http://localhost:8777"  # Your local Flask game URL
     result = test_scores_service(url)
 
     if result:
