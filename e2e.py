@@ -197,7 +197,7 @@ def test_scores_service(url):
                 time.sleep(1)
 
                 # Step 5: Start the game
-                driver.find_element(By.ID, "startButton").click()
+                driver.find_element(By.ID, "startBtn").click()
                 time.sleep(2)
 
                 # Step 6: Fill out game inputs
