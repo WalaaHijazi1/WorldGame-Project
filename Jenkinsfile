@@ -233,15 +233,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Manual Game Play') {
-            steps {
-        	echo "Please open http://localhost:8777 in your browser and play the game."
-        	echo "Jenkins will pause until you confirm below that you're finished."
-        	input message: 'Click "Continue" once you finish playing the game.'
-    	}
-        }
-        
+  
         stage('Docker Compose Test') {
             steps {
         	sh '''
