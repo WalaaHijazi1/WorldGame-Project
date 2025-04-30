@@ -1,23 +1,29 @@
 FROM python:3.9-slim
+
 WORKDIR /app
 
-# Install Chromium and ChromeDriver
+
+
+# Install system dependencies including Chrome
 RUN apt-get update && apt-get install -y \
-    chromium-driver \
-    chromium-browser \
-    chromium-common \
-    chromium \
+    wget \
+    curl \
+    gnupg \
+    unzip \
     fonts-liberation \
     libnss3 \
     libxss1 \
     libappindicator3-1 \
     libasound2 \
     xdg-utils \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables for Selenium
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
 
 # Copy only necessary files
 COPY  Live.py Score.py  requirements.txt  ./

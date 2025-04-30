@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+
 import time
 import sys
 import os
@@ -31,15 +32,12 @@ def test_scores_service(url):
     driver_options.add_argument("--no-sandbox")
     driver_options.add_argument("--disable-dev-shm-usage")
     driver_options.add_argument("--disable-gpu")
-    driver_options.binary_location = "/usr/bin/chromium"
+    #driver_options.binary_location = "/usr/bin/chromium"
 
-    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
-    service = Service(executable_path=chromedriver_path)
+    #chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "/usr/lib/chromium/chromedriver")
+    #service = Service(executable_path=chromedriver_path)
     
-    print("CHROME_BIN:", os.getenv("CHROME_BIN"))
-    print("CHROMEDRIVER_PATH:", os.getenv("CHROMEDRIVER_PATH"))
-    print("Checking if chromedriver exists:", os.path.exists("/usr/lib/chromium/chromedriver"))
-    print("Checking if chromium exists:", os.path.exists("/usr/bin/chromium"))
+    service = Service(ChromeDriverManager().install())
 
 
     #driver_options = Options()
