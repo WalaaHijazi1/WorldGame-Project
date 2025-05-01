@@ -39,21 +39,18 @@ def automated_game_test(url):
 
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
-        
+        time.sleep(3)
 
-        time.sleep(25)  # wait for manual play and submission
-        
-        # After clicking Start Button
+        # Step 5: Optional auto input for Memory Game
         if "memory" in driver.current_url:
-            # Wait for inputs to appear
             inputs = wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
             for input_box in inputs:
-                input_box.send_keys("1")  # dummy values
+                input_box.send_keys("1")
             driver.find_element(By.ID, "submit-btn").click()
 
-
-        # Step 5: Wait for result element
         print("Waiting for result message...")
+
+        # Step 6: Wait for result
         try:
             result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         except:
@@ -62,19 +59,21 @@ def automated_game_test(url):
         result_text = result_element.text.strip()
         print(f"\nResult message: {result_text}")
 
-        # Step 6: Extract score
-        match = re.search(r"score\s*is\s*[:\-]?\s*(\d+)", result_text, re.IGNORECASE)
-        if match:
-            score = int(match.group(1))
-            print(f"Extracted score: {score}")
-            assert 1 <= score <= 1000, "Score is out of expected range!"
+        # Step 7: If win, extract score
+        if "won" in result_text.lower():
+            match = re.search(r"score\s*is\s*[:\-]?\s*(\d+)", result_text, re.IGNORECASE)
+            if match:
+                score = int(match.group(1))
+                print(f"Extracted score: {score}")
+                assert 1 <= score <= 1000, "Score is out of expected range!"
+            else:
+                print("Win detected but score not found — check format.")
         else:
-            print("Score not found. Possibly a loss or format issue.")
+            print("Game lost, skipping score check.")
 
     except Exception as e:
         print(f"\nTest failed: {str(e)}")
         traceback.print_exc()
-        # Optional: Dump page content for debugging
         if driver:
             print("\nPage content at failure:")
             print(driver.page_source)
