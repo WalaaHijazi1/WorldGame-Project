@@ -40,19 +40,19 @@ def automated_game_test(url):
         # Step 5: Wait for result page (Winner or Lost)
         result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
-        print(f"\ní ¼í¾¯ Result message: {result_text}")
+        print(f"\nResult message: {result_text}")
 
         # Step 6: Extract score
         score_match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
         if score_match:
             score = int(score_match.group(1))
-            print(f"í ¼í¿† Score: {score}")
+            print(f"Score: {score}")
             assert 1 <= score <= 1000, "Score is out of expected range!"
         else:
-            print("âš ï¸ Score not found â€” maybe you lost?")
+            print("Score not found â€” maybe you lost?")
 
     except Exception as e:
-        print(f"âŒ Test failed: {e}")
+        print(f"Test failed: {e}")
     finally:
         if driver:
             driver.quit()
