@@ -6,7 +6,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
-import time
 import traceback
 
 def automated_game_test(url):
@@ -15,12 +14,13 @@ def automated_game_test(url):
         print("Launching browser...")
 
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")  # crucial for CI/CD
+        # NOTE: Comment out headless to allow manual play
+        # options.add_argument("--headless")  # REMOVE THIS FOR MANUAL TESTING
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 40)
+        wait = WebDriverWait(driver, 120)
 
         print(f"Opening game: {url}")
         driver.get(url)
@@ -39,18 +39,17 @@ def automated_game_test(url):
 
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
-        time.sleep(3)
 
-        # Step 5: Optional auto input for Memory Game
-        if "memory" in driver.current_url:
-            inputs = wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
-            for input_box in inputs:
-                input_box.send_keys("1")
-            driver.find_element(By.ID, "submit-btn").click()
+        print("\nÌ†ºÌæÆ Game started. You can now play manually...")
+        print("‚è≥ Waiting for you to finish and click the 'Finish' button...")
 
-        print("Waiting for result message...")
+        # Step 5: Wait until the Finish button is clicked manually by the user
+        finish_button = wait.until(EC.element_to_be_clickable((By.ID, "finish-test-btn")))
+        finish_button.click()  # This line just confirms that the button is interactable
 
-        # Step 6: Wait for result
+        print("‚úÖ Finish button clicked. Checking result...")
+
+        # Step 6: Wait for result element
         try:
             result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         except:
@@ -83,6 +82,7 @@ def automated_game_test(url):
 
 if __name__ == "__main__":
     automated_game_test("http://localhost:8777")
+
 
 
 

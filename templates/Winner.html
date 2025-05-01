@@ -14,7 +14,6 @@
     .header_section {
       padding: 20px 0;
       background-color: rgb(210, 233, 248);
-      /* border-bottom: 5px solid #2c3e50; */ /* Removed the line */
     }
     .message {
       text-align: center;
@@ -22,6 +21,18 @@
       color: #2c3e50;
       font-weight: bold;
       margin-top: 40px;
+    }
+    .finish-button {
+      display: block;
+      margin: 40px auto;
+      padding: 10px 30px;
+      background-color: #28a745;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -42,7 +53,7 @@
 </div>
 
 <div id="resultMessage" class="message">
-  Congratulations {{ user_name }}! 🎉<br>
+  Congratulations {{ user_name }}! 🎉?<br>
   {% if message %}
     <p>{{ message }}</p>
   {% endif %}
@@ -50,15 +61,7 @@
   Your new score is: {{ current_score }}
 </div>
 
-<script>
-  function launchConfetti() {
-    confetti({
-      particleCount: 150,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
-  }
-</script>
+<button id="finish-test-btn" class="finish-button">Finish</button>
 
-</body>
-</html>
+<script>
+  function launchConf
