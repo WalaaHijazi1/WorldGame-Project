@@ -15,7 +15,7 @@ def automated_game_test(url):
 
         options = webdriver.ChromeOptions()
         # NOTE: Comment out headless to allow manual play
-        # options.add_argument("--headless")  # REMOVE THIS FOR MANUAL TESTING
+        options.add_argument("--headless")  # REMOVE THIS FOR MANUAL TESTING
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
