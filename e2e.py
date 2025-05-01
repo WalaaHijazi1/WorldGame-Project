@@ -40,14 +40,14 @@ def automated_game_test(url):
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
-        print("\nÌ†ºÌæÆ Game started. You can now play manually...")
-        print("‚è≥ Waiting for you to finish and click the 'Finish' button...")
+        print("\nGame started. You can now play manually...")
+        print("Waiting for you to finish and click the 'Finish' button...")
 
         # Step 5: Wait until the Finish button is clicked manually by the user
         finish_button = wait.until(EC.element_to_be_clickable((By.ID, "finish-test-btn")))
         finish_button.click()  # This line just confirms that the button is interactable
 
-        print("‚úÖ Finish button clicked. Checking result...")
+        print("Finish button clicked. Checking result...")
 
         # Step 6: Wait for result element
         try:
