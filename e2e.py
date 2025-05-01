@@ -40,7 +40,7 @@ def automated_game_test(url):
         difficulty.click()
 
         # Step 4: Start game
-        wait.until(EC.element_to_be_clickable((By.ID, "startGameBtn"))).click()
+        wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
         # Step 5: Wait for result
         result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
