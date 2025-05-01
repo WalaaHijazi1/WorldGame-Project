@@ -240,6 +240,7 @@ pipeline {
         	sh '''
             	echo "Running backend tests on the host against the running Docker Compose services..."
             	. ${VENV_DIR}/bin/activate
+               export PYTHONIOENCODING=utf-8
             	python3 e2e.py
         	'''
     	}
