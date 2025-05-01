@@ -63,7 +63,8 @@ def test_scores_service(url):
                 print(f"Result message: {result}")
 
                 # Extract score from result
-                score_match = re.search(r"Your new score is: (\d+)", result)
+                score_match = re.search(r"score\s*is\s*:\s*(\d+)", result, re.IGNORECASE)
+                #score_match = re.search(r"Your new score is: (\d+)", result)
                 #score_match = re.search(r"score is: (\d+)", result)
                 if score_match:
                     score = int(score_match.group(1))
