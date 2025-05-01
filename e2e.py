@@ -26,17 +26,17 @@ def manual_play_session(url):
 
         result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
-        print(f"\nÌ†ºÌæØ Game Result: {result_text}")
+        print(f"\nGame Result: {result_text}")
 
         score_match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
         if score_match:
             score = int(score_match.group(1))
-            print(f"Ì†ºÌøÜ Final Score: {score}")
+            print(f"Final Score: {score}")
         else:
-            print("‚ö†Ô∏è Could not extract score. Maybe you lost or the message changed.")
+            print("Could not extract score. Maybe you lost or the message changed.")
 
     except Exception as e:
-        print(f"‚ùå Error during manual session: {e}")
+        print(f"Error during manual session: {e}")
     finally:
         # Check if we're in an interactive terminal
         if sys.stdin.isatty():
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     if "--manual" in sys.argv:
         manual_play_session(url)
     else:
-        print("‚ö†Ô∏è Skipping manual game session. Use `python3 e2e.py --manual` to run locally.")
+        print("Skipping manual game session. Use `python3 e2e.py --manual` to run locally.")
 
 
 
