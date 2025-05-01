@@ -8,32 +8,26 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
 import sys
+import os
 
 def manual_play_session(url):
     driver = None
     try:
-        # ‚úÖ Launch normal browser (not headless)
         options = webdriver.ChromeOptions()
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 300)  # Up to 5 minutes for manual interaction
+        wait = WebDriverWait(driver, 300)
 
         print(f"Opening the game at {url}... Play manually and click 'Submit' when done.")
 
         driver.get(url)
 
-        # Step 1: Enter your name and start
         wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Manual Player")
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
 
-        # ‚è≥ Wait for the result to appear after you manually play
-        result_element = wait.until(
-            EC.presence_of_element_located((By.ID, "resultMessage"))
-        )
-
+        result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
         print(f"\nÌ†ºÌæØ Game Result: {result_text}")
 
-        # Ì†ΩÌ¥ç Extract score if available
         score_match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
         if score_match:
             score = int(score_match.group(1))
@@ -44,20 +38,22 @@ def manual_play_session(url):
     except Exception as e:
         print(f"‚ùå Error during manual session: {e}")
     finally:
-        input("\nPress ENTER to close the browser...")
+        # Check if we're in an interactive terminal
+        if sys.stdin.isatty():
+            input("\nPress ENTER to close the browser...")
+        else:
+            print("Skipping input() since this is a non-interactive environment.")
         if driver:
             driver.quit()
 
 
 if __name__ == '__main__':
     url = "http://localhost:8777"
-    
+    # Only run manual mode if explicitly passed
     if "--manual" in sys.argv:
         manual_play_session(url)
     else:
-        print("‚ùå Manual session skipped. Use --manual to run locally.")
-
-
+        print("‚ö†Ô∏è Skipping manual game session. Use `python3 e2e.py --manual` to run locally.")
 
 
 
