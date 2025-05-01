@@ -67,7 +67,9 @@ def automated_game_test(url):
         raise
     finally:
         if driver:
+            input("Press ENTER to close the browser...")
             driver.quit()
+
 
 if __name__ == "__main__":
     automated_game_test("http://localhost:8777")
