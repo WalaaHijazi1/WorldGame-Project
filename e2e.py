@@ -29,7 +29,8 @@ def automated_game_test(url):
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
 
         # Step 2: Choose a game
-        game = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".game-box")))
+        game = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".game-card")))
+
         game.click()
 
         # Step 3: Choose difficulty
