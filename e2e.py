@@ -38,6 +38,10 @@ def automated_game_test(url):
 
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
+        
+
+        time.sleep(25)  # wait for manual play and submission
+
 
         # Step 5: Wait for result element
         print("Waiting for result message...")
