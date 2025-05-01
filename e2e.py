@@ -6,14 +6,15 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-import mysql.connector
 import time
 import sys
 import random
+import re
 
 def test_scores_service(url):
     driver = None
     try:
+        # Setup headless Chrome
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -21,6 +22,7 @@ def test_scores_service(url):
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         wait = WebDriverWait(driver, 10)
 
+        # Go to homepage
         driver.get(url)
         wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Test Player")
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
@@ -52,7 +54,7 @@ def test_scores_service(url):
 
                 wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Submit')]"))).click()
 
-                # Try reading from #resultMessage, fallback to .message if not present
+                # Try reading result from #resultMessage or fallback to .message
                 try:
                     result = wait.until(EC.presence_of_element_located((By.ID, "resultMessage"))).text
                 except:
@@ -60,11 +62,17 @@ def test_scores_service(url):
 
                 print(f"Result message: {result}")
 
-                score = get_score_from_db()
-                if 1 <= score <= 1000:
-                    print(f"✅ Valid score from DB: {score}")
+                # Extract score from result
+                score_match = re.search(r"score is: (\d+)", result)
+                if score_match:
+                    score = int(score_match.group(1))
+                    if 1 <= score <= 1000:
+                        print(f"✅ Valid score: {score}")
+                    else:
+                        print(f"❌ Invalid score: {score}")
+                        return False
                 else:
-                    print(f"❌ Invalid score from DB: {score}")
+                    print("❌ Score not found in result message.")
                     return False
 
             except Exception as e:
@@ -82,32 +90,6 @@ def test_scores_service(url):
             driver.quit()
 
 
-def get_score_from_db():
-    conn = None
-    try:
-        conn = mysql.connector.connect(
-            host="mysql",
-            user="root",
-            password="gamespass",
-            database="games_db"
-        )
-        cursor = conn.cursor()
-        cursor.execute("SELECT score FROM game_scores ORDER BY id DESC LIMIT 1;")
-        result = cursor.fetchone()
-        if result:
-            print(f"Fetched score from DB: {result[0]}")
-            return result[0]
-        else:
-            print("No score found.")
-            return 0
-    except mysql.connector.Error as err:
-        print(f"MySQL Error: {err}")
-        return 0
-    finally:
-        if conn:
-            conn.close()
-
-
 def main_function():
     url = "http://localhost:8777"
     if test_scores_service(url):
@@ -116,6 +98,7 @@ def main_function():
     else:
         print("\n❌ One or more tests failed.")
         sys.exit(1)
+
 
 if __name__ == '__main__':
     main_function()
