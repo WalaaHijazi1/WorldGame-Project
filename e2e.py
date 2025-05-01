@@ -34,7 +34,9 @@ def automated_game_test(url):
         game.click()
 
         # Step 3: Choose difficulty
-        difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-box[data-level='1']")))
+        difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-option[data-difficulty='1']")))
+
+        #difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-box[data-level='1']")))
         difficulty.click()
 
         # Step 4: Start game
