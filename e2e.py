@@ -42,6 +42,14 @@ def automated_game_test(url):
         
 
         time.sleep(25)  # wait for manual play and submission
+        
+        # After clicking Start Button
+        if "memory" in driver.current_url:
+            # Wait for inputs to appear
+            inputs = wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
+            for input_box in inputs:
+                input_box.send_keys("1")  # dummy values
+            driver.find_element(By.ID, "submit-btn").click()
 
 
         # Step 5: Wait for result element
