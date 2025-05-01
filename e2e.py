@@ -51,7 +51,12 @@ def manual_play_session(url):
 
 if __name__ == '__main__':
     url = "http://localhost:8777"
-    manual_play_session(url)
+    
+    if "--manual" in sys.argv:
+        manual_play_session(url)
+    else:
+        print("❌ Manual session skipped. Use --manual to run locally.")
+
 
 
 
