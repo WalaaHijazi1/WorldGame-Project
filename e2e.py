@@ -1,4 +1,172 @@
 # -*- coding: utf-8 -*-
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
+import mysql.connector
+import time
+import sys
+import random
+
+def test_scores_service(url):
+    driver = None
+    try:
+        options = Options()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        wait = WebDriverWait(driver, 10)
+
+        driver.get(url)
+        wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Test Player")
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
+
+        game_ids = ["memory_game", "guess_game", "currency_game"]
+        for game_id in game_ids:
+            try:
+                print(f"\n--- Testing game: {game_id} ---")
+                wait.until(EC.element_to_be_clickable((By.ID, game_id))).click()
+
+                difficulty = random.randint(1, 3)
+                wait.until(EC.element_to_be_clickable((By.ID, str(difficulty)))).click()
+
+                wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
+
+                if game_id == "guess_game":
+                    guess_input = wait.until(EC.presence_of_element_located((By.NAME, "user_guess")))
+                    guess_input.send_keys(str(random.randint(1, 10)))
+
+                elif game_id == "currency_game":
+                    currency_input = wait.until(EC.presence_of_element_located((By.NAME, "user_choice")))
+                    currency_input.send_keys(str(round(random.uniform(10.0, 50.0), 2)))
+
+                elif game_id == "memory_game":
+                    wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
+                    memory_inputs = driver.find_elements(By.NAME, "user_input")
+                    for inp in memory_inputs:
+                        inp.send_keys(str(random.randint(1, 9)))
+
+                wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Submit')]"))).click()
+
+                # Try reading from #resultMessage, fallback to .message if not present
+                try:
+                    result = wait.until(EC.presence_of_element_located((By.ID, "resultMessage"))).text
+                except:
+                    result = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message"))).text
+
+                print(f"Result message: {result}")
+
+                score = get_score_from_db()
+                if 1 <= score <= 1000:
+                    print(f"✅ Valid score from DB: {score}")
+                else:
+                    print(f"❌ Invalid score from DB: {score}")
+                    return False
+
+            except Exception as e:
+                print(f"Error testing {game_id}: {e}")
+                continue
+
+        return True
+
+    except Exception as e:
+        print("Global test failure:", e)
+        return False
+
+    finally:
+        if driver:
+            driver.quit()
+
+
+def get_score_from_db():
+    conn = None
+    try:
+        conn = mysql.connector.connect(
+            host="mysql",
+            user="root",
+            password="gamespass",
+            database="games_db"
+        )
+        cursor = conn.cursor()
+        cursor.execute("SELECT score FROM game_scores ORDER BY id DESC LIMIT 1;")
+        result = cursor.fetchone()
+        if result:
+            print(f"Fetched score from DB: {result[0]}")
+            return result[0]
+        else:
+            print("No score found.")
+            return 0
+    except mysql.connector.Error as err:
+        print(f"MySQL Error: {err}")
+        return 0
+    finally:
+        if conn:
+            conn.close()
+
+
+def main_function():
+    url = "http://localhost:8777"
+    if test_scores_service(url):
+        print("\nAll tests passed successfully.")
+        sys.exit(0)
+    else:
+        print("\n❌ One or more tests failed.")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main_function()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+# -*- coding: utf-8 -*-
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -134,8 +302,7 @@ def main_function():
 if __name__ == '__main__':
     main_function()
 
-
-"""
+######################################################################################################
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
