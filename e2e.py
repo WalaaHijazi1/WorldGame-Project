@@ -56,7 +56,7 @@ def automated_game_test(url):
             result_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message")))
 
         result_text = result_element.text.strip()
-        print(f"\ní ¼í¾¯ Result message: {result_text}")
+        print(f"\nResult message: {result_text}")
 
         # Step 7: Extract score if win
         if "won" in result_text.lower():
