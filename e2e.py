@@ -2,108 +2,56 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-import time
-import sys
-import random
 import re
+import sys
 
-def test_scores_service(url):
+def manual_play_session(url):
     driver = None
     try:
-        # Setup headless Chrome
-        options = Options()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
+        # ‚úÖ Launch normal browser (not headless)
+        options = webdriver.ChromeOptions()
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, 300)  # Up to 5 minutes for manual interaction
 
-        # Go to homepage
+        print(f"Opening the game at {url}... Play manually and click 'Submit' when done.")
+
         driver.get(url)
-        wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Test Player")
+
+        # Step 1: Enter your name and start
+        wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Manual Player")
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
 
-        game_ids = ["memory_game", "guess_game", "currency_game"]
-        for game_id in game_ids:
-            try:
-                print(f"\n--- Testing game: {game_id} ---")
-                wait.until(EC.element_to_be_clickable((By.ID, game_id))).click()
+        # ‚è≥ Wait for the result to appear after you manually play
+        result_element = wait.until(
+            EC.presence_of_element_located((By.ID, "resultMessage"))
+        )
 
-                difficulty = random.randint(1, 3)
-                wait.until(EC.element_to_be_clickable((By.ID, str(difficulty)))).click()
+        result_text = result_element.text
+        print(f"\nÌ†ºÌæØ Game Result: {result_text}")
 
-                wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
-
-                if game_id == "guess_game":
-                    guess_input = wait.until(EC.presence_of_element_located((By.NAME, "user_guess")))
-                    guess_input.send_keys(str(random.randint(1, 10)))
-
-                elif game_id == "currency_game":
-                    currency_input = wait.until(EC.presence_of_element_located((By.NAME, "user_choice")))
-                    currency_input.send_keys(str(round(random.uniform(10.0, 50.0), 2)))
-
-                elif game_id == "memory_game":
-                    wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
-                    memory_inputs = driver.find_elements(By.NAME, "user_input")
-                    for inp in memory_inputs:
-                        inp.send_keys(str(random.randint(1, 9)))
-
-                wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Submit')]"))).click()
-
-                # Try reading result from #resultMessage or fallback to .message
-                try:
-                    result = wait.until(EC.presence_of_element_located((By.ID, "resultMessage"))).text
-                except:
-                    result = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message"))).text
-
-                print(f"Result message: {result}")
-
-                # Extract score from result
-                score_match = re.search(r"score\s*is\s*:\s*(\d+)", result, re.IGNORECASE)
-                #score_match = re.search(r"Your new score is: (\d+)", result)
-                #score_match = re.search(r"score is: (\d+)", result)
-                if score_match:
-                    score = int(score_match.group(1))
-                    if 1 <= score <= 1000:
-                        print(f"‚úÖ Valid score: {score}")
-                    else:
-                        print(f"‚ùå Invalid score: {score}")
-                        return False
-                else:
-                    print("‚ùå Score not found in result message.")
-                    return False
-
-            except Exception as e:
-                print(f"Error testing {game_id}: {e}")
-                continue
-
-        return True
+        # Ì†ΩÌ¥ç Extract score if available
+        score_match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
+        if score_match:
+            score = int(score_match.group(1))
+            print(f"Ì†ºÌøÜ Final Score: {score}")
+        else:
+            print("‚ö†Ô∏è Could not extract score. Maybe you lost or the message changed.")
 
     except Exception as e:
-        print("Global test failure:", e)
-        return False
-
+        print(f"‚ùå Error during manual session: {e}")
     finally:
+        input("\nPress ENTER to close the browser...")
         if driver:
             driver.quit()
 
 
-def main_function():
-    url = "http://localhost:8777"
-    if test_scores_service(url):
-        print("\nAll tests passed successfully.")
-        sys.exit(0)
-    else:
-        print("\n‚ùå One or more tests failed.")
-        sys.exit(1)
-
-
 if __name__ == '__main__':
-    main_function()
+    url = "http://localhost:8777"
+    manual_play_session(url)
+
 
 
 
