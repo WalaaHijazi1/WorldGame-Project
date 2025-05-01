@@ -14,12 +14,13 @@ def automated_game_test(url):
         print("Launching browser...")
 
         options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
+        # GUI mode (do NOT use headless if you want to play manually)
+        # options.add_argument("--headless")  # <- Removed for manual interaction
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 60)
+        wait = WebDriverWait(driver, 120)
 
         print(f"Opening game: {url}")
         driver.get(url)
@@ -39,49 +40,40 @@ def automated_game_test(url):
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
-        print("Waiting for form input...")
+        print("\nGame started. Please play manually in the browser.")
+        print("Waiting for you to finish and click the 'Finish' button...")
 
-        # Step 5: Fill inputs based on game
-        if "memory" in driver.current_url:
-            inputs = wait.until(EC.presence_of_all_elements_located((By.NAME, "user_input")))
-            for input_box in inputs:
-                input_box.send_keys("1")
-        elif "guess" in driver.current_url:
-            guess = wait.until(EC.presence_of_element_located((By.NAME, "user_guess")))
-            guess.send_keys("5")
-        elif "currency" in driver.current_url:
-            amount = wait.until(EC.presence_of_element_located((By.NAME, "user_choice")))
-            amount.send_keys("20.5")
+        # Step 5: Wait for user to click the 'Finish' button (on Winner/Lost.html)
+        finish_button = wait.until(EC.element_to_be_clickable((By.ID, "finish-test-btn")))
+        finish_button.click()
 
-        # Submit
-        wait.until(EC.element_to_be_clickable((By.ID, "submit-btn"))).click()
+        print("Finish button clicked. Fetching result...")
 
-        print("Submitted. Waiting for result...")
-
+        # Step 6: Wait for result
         try:
             result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         except:
             result_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message")))
 
         result_text = result_element.text.strip()
-        print(f"Result message: {result_text}")
+        print(f"\ní ¼í¾¯ Result message: {result_text}")
 
+        # Step 7: Extract score if win
         if "won" in result_text.lower():
-            match = re.search(r"score\\s*is\\s*[:\\-]?\\s*(\\d+)", result_text, re.IGNORECASE)
+            match = re.search(r"score\s*is\s*[:\-]?\s*(\d+)", result_text, re.IGNORECASE)
             if match:
                 score = int(match.group(1))
                 print(f"Extracted score: {score}")
-                assert 1 <= score <= 1000, "Score out of expected range!"
+                assert 1 <= score <= 1000, "Score is out of expected range!"
         else:
             print("Game lost or no score detected.")
 
     except Exception as e:
-        print(f"Test failed: {str(e)}")
+        print(f"\nTest failed: {str(e)}")
         traceback.print_exc()
         if driver:
-            print("\\nPage content at failure:")
+            print("\nPage content at failure:")
             print(driver.page_source)
-        raise
     finally:
         if driver:
             driver.quit()
