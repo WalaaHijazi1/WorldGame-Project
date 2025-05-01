@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -7,54 +6,60 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
-import sys
-import os
 
-def manual_play_session(url):
+
+def automated_game_test(url):
     driver = None
     try:
         options = webdriver.ChromeOptions()
+        options.add_argument('--headless')  # Remove this if running locally with display
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 300)
+        wait = WebDriverWait(driver, 20)
 
-        print(f"Opening the game at {url}... Play manually and click 'Submit' when done.")
-
+        print(f"Opening game: {url}")
         driver.get(url)
 
-        wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("Manual Player")
+        # Step 1: Fill name and click "START PLAYING!"
+        wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("AutoTester")
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
 
+        # Step 2: Select the first game (Memory Game) by clicking its container
+        game = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".game-box")))
+        game.click()
+
+        # Step 3: Select difficulty (e.g., level 1)
+        difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-box[data-level='1']")))
+        difficulty.click()
+
+        # Step 4: Click red "Start" button
+        wait.until(EC.element_to_be_clickable((By.ID, "startGameBtn"))).click()
+
+        # Step 5: Wait for result page (Winner or Lost)
         result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
-        print(f"\nGame Result: {result_text}")
+        print(f"\ní ¼í¾¯ Result message: {result_text}")
 
+        # Step 6: Extract score
         score_match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
         if score_match:
             score = int(score_match.group(1))
-            print(f"Final Score: {score}")
+            print(f"í ¼í¿† Score: {score}")
+            assert 1 <= score <= 1000, "Score is out of expected range!"
         else:
-            print("Could not extract score. Maybe you lost or the message changed.")
+            print("âš ï¸ Score not found â€” maybe you lost?")
 
     except Exception as e:
-        print(f"Error during manual session: {e}")
+        print(f"âŒ Test failed: {e}")
     finally:
-        # Check if we're in an interactive terminal
-        if sys.stdin.isatty():
-            input("\nPress ENTER to close the browser...")
-        else:
-            print("Skipping input() since this is a non-interactive environment.")
         if driver:
             driver.quit()
 
 
-if __name__ == '__main__':
-    url = "http://localhost:8777"
-    # Only run manual mode if explicitly passed
-    if "--manual" in sys.argv:
-        manual_play_session(url)
-    else:
-        print("Skipping manual game session. Use `python3 e2e.py --manual` to run locally.")
-
+if __name__ == "__main__":
+    automated_game_test("http://localhost:8777")
 
 
 

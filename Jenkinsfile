@@ -240,7 +240,7 @@ pipeline {
         	sh '''
             	echo "Running backend tests on the host against the running Docker Compose services..."
             	. ${VENV_DIR}/bin/activate
-            	python3 e2e.py --manual
+            	python3 e2e.py
         	'''
     	}
        }
