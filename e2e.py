@@ -6,15 +6,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import re
-
+import sys
 
 def automated_game_test(url):
     driver = None
     try:
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')  # Remove this if running locally with display
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
+        options.add_argument('--user-data-dir=/tmp/unique-profile')  # Prevent session conflict
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         wait = WebDriverWait(driver, 20)
@@ -26,18 +27,18 @@ def automated_game_test(url):
         wait.until(EC.presence_of_element_located((By.NAME, "Name"))).send_keys("AutoTester")
         wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'START PLAYING!')]"))).click()
 
-        # Step 2: Select the first game (Memory Game) by clicking its container
+        # Step 2: Select the first game (Memory Game)
         game = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".game-box")))
         game.click()
 
-        # Step 3: Select difficulty (e.g., level 1)
+        # Step 3: Select difficulty
         difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-box[data-level='1']")))
         difficulty.click()
 
         # Step 4: Click red "Start" button
-        wait.until(EC.element_to_be_clickable((By.ID, "startGameBtn"))).click()
+        wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
-        # Step 5: Wait for result page (Winner or Lost)
+        # Step 5: Wait for result page
         result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
         print(f"\nResult message: {result_text}")
@@ -50,16 +51,18 @@ def automated_game_test(url):
             assert 1 <= score <= 1000, "Score is out of expected range!"
         else:
             print("Score not found — maybe you lost?")
+            sys.exit(1)
 
     except Exception as e:
         print(f"Test failed: {e}")
+        sys.exit(1)  #Fail the build in Jenkins
     finally:
         if driver:
             driver.quit()
 
-
 if __name__ == "__main__":
     automated_game_test("http://localhost:8777")
+
 
 
 
