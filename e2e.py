@@ -43,7 +43,11 @@ def automated_game_test(url):
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
         # Step 5: Wait for result
-        result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
+        try:
+            result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
+        except:
+            result_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message")))
+        #result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
         result_text = result_element.text
         print(f"\nResult message: {result_text}")
 
