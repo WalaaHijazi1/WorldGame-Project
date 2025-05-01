@@ -41,15 +41,13 @@
   </nav>
 </div>
 
-<div class="container">
-  <div class="message">
-    Congratulations {{ user_name }}! 🎉<br>
-    {% if message %}
-      <p>{{ message }}</p>
-    {% endif %}
-    You nailed it! <br>
-    Your new score is: {{ current_score }}
-  </div>
+<div id="resultMessage" class="message">
+  Congratulations {{ user_name }}! ??<br>
+  {% if message %}
+    <p>{{ message }}</p>
+  {% endif %}
+  You nailed it! <br>
+  Your new score is: {{ current_score }}
 </div>
 
 <script>
