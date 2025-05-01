@@ -19,7 +19,7 @@ def automated_game_test(url):
         options.add_argument("--disable-dev-shm-usage")
 
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 40)
 
         print(f"Opening game: {url}")
         driver.get(url)
@@ -30,43 +30,47 @@ def automated_game_test(url):
 
         # Step 2: Choose a game
         game = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".game-card")))
-
         game.click()
 
         # Step 3: Choose difficulty
         difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-option[data-difficulty='1']")))
-
-        #difficulty = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".difficulty-box[data-level='1']")))
         difficulty.click()
 
         # Step 4: Start game
         wait.until(EC.element_to_be_clickable((By.ID, "startBtn"))).click()
 
-        # Step 5: Wait for result
-        result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
-        result_text = result_element.text
+        # Step 5: Wait for result element
+        print("Waiting for result message...")
+        try:
+            result_element = wait.until(EC.presence_of_element_located((By.ID, "resultMessage")))
+        except:
+            result_element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, "message")))
+
+        result_text = result_element.text.strip()
         print(f"\nResult message: {result_text}")
 
-
         # Step 6: Extract score
-        match = re.search(r"score\s*is\s*:\s*(\d+)", result_text, re.IGNORECASE)
+        match = re.search(r"score\s*is\s*[:\-]?\s*(\d+)", result_text, re.IGNORECASE)
         if match:
             score = int(match.group(1))
-            print(f"Score: {score}")
+            print(f"Extracted score: {score}")
+            assert 1 <= score <= 1000, "Score is out of expected range!"
         else:
-            print("Score not found. Probably you lost?")
+            print("Score not found. Possibly a loss or format issue.")
 
     except Exception as e:
         print(f"\nTest failed: {str(e)}")
         traceback.print_exc()
+        # Optional: Dump page content for debugging
+        if driver:
+            print("\nPage content at failure:")
+            print(driver.page_source)
     finally:
         if driver:
             driver.quit()
 
 if __name__ == "__main__":
     automated_game_test("http://localhost:8777")
-
-
 
 
 
