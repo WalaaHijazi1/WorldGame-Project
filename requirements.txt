@@ -1,3 +1,6 @@
 flask
+<<<<<<< HEAD
 selenium
 webdriver-manager
+=======
+>>>>>>> 05de871 (clean up ...)

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: '3.8'
 services:                                                  # Selenium Hub Service.
   app:
@@ -31,3 +32,14 @@ services:                                                  # Selenium Hub Servic
 
 networks:
   test-network:
+=======
+version: '3.8'        # Specifies the version of the Docker Compose file format.
+
+services:
+  web:
+    build: .          # This tells Docker Compose to build the image from the current directory (.) using the Dockerfile located there.
+    ports:
+      - "8777:8777"   # Maps ports from your host machine to the container.
+    volumes:
+      - ./scores_file.txt:/app/scores_file.txt                  # mounts files or directories from your host into the container.
+>>>>>>> 05de871 (clean up ...)
