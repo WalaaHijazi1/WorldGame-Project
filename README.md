@@ -1,6 +1,5 @@
-#   ?????????????????? P????????????
-#       ?????????? H??????????
-
+#   í µíµí µíµ í µíµ£í µíµí µíµ•í µí´¾í µíµ’í µíµí µíµ– â„™í µíµ£í µíµ í µíµ›í µíµ–í µíµ”í µíµ¥
+#       í µíµí µíµ’í µíµí µíµ’í µíµ’ â„í µíµší µíµ›í µíµ’í µíµ«í µíµš
 
 In this project I built three Games:
 
@@ -40,7 +39,7 @@ This game tests the user's short-term memory by displaying a sequence of random 
    
 #### Scores.py File:
    * This Score.py script manages a simple scoring system for a game, where the user's cumulative score is stored in a file called scores_file.txt.
-   * It first checks whether the scores_file.txt exists in the same directory as the script. If it doesn’t, it creates the file and initializes the score to 0.
+   * It first checks whether the scores_file.txt exists in the same directory as the script. If it doesnâ€™t, it creates the file and initializes the score to 0.
    * Then it reads the current score, adds the new winning points, and writes the updated score back to the file.
    * The script uses os.path to handle paths in a portable way and ensures the file is updated in-place using f1.seek(0).
 
