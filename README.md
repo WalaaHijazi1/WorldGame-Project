@@ -1,9 +1,9 @@
-# °°°·.°·..·°¯°·._.· ???????g???? ???jE??? ·._.·°¯°·.·° .·°°°
-
-# ¸„.-•~¹°”ˆ˜¨ ???a?? HI?????? ¨˜ˆ”°¹~•-.„¸
+#   ?????????????????? P????????????
+#       ?????????? H??????????
 
 
 In this project I built three Games:
+
 ### CurrencyRoulette Game:
 This game challenges the user to guess the value in ILS (Israeli Shekel) of a randomly generated amount in USD. The current exchange rate is fetched live using a currency API. Based on the difficulty level, a tolerance interval is calculated around the correct ILS value, and the user wins if their guess falls within that range.
 
@@ -13,9 +13,6 @@ In this simple number guessing game, the system generates a random number betwee
 
 ### Memory Game:
 This game tests the user's short-term memory by displaying a sequence of random numbers for a brief period (default 10 seconds). The user must recall and enter the exact sequence in the correct order. Winning depends on accurate memory recall.
-
-
-
 
 
 <p align="center">
